@@ -1,0 +1,52 @@
+@import "../node_modules/bulma/sass/utilities/initial-variables"
+@import "../node_modules/bulma/sass/utilities/functions"
+
+// Colors
+$primary: #0d624c
+$secondary: #70ab97
+$tertiary: #3c5c99
+$info: #e9e6e2
+$dark: #898076
+
+// Typography
+$font-family-sans: 'Open Sans', sans-serif
+$family-primary: $font-family-sans
+$family-monospace: monospace
+$render-mode: optimizeLegibility
+
+$weight-light: 300
+$weight-normal: 400
+$weight-medium: 500
+$weight-semibold: 700
+$weight-bold: 800
+$weight-black: 900
+
+$size-1: 3rem
+$size-2: 2.5rem
+$size-3: 2rem
+$size-4: 1.5rem
+$size-5: 1.25rem
+$size-6: 1rem
+$size-7: 0.75rem
+
+$fa-font-path: "/wp-content/themes/eyecarenow/node_modules/font-awesome/fonts"
+@import "../node_modules/font-awesome/scss/font-awesome"
+
+$radius-small: 0
+$radius: 0
+$radius-large: 0
+
+// The container gap, which acts as the offset for breakpoints
+$gap: 24px
+// 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
+$tablet: 769px
+// 960px container + 3rem
+$desktop: 960px + (2 * $gap)
+// 1152px container + 3rem
+$widescreen: 1152px + (2 * $gap)
+// 1344px container + 3rem
+$fullhd: 1410px + (2 * $gap)
+
+//$column-gap: $gap
+
+@import "../node_modules/bulma/bulma"
