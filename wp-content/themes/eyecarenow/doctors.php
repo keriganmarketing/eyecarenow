@@ -85,7 +85,7 @@ get_header(); ?>
                                 //echo '<img src="' . $headshot['url'] . '" alt="' . $headshot['alt'] . '" />';
                                 echo '</div><div class="post-text col res-23 wide-23 ph-1">';
                                 echo '<h2><a href="' . get_page_link($id) . '">' . $doctor->post_title . '</a></h2>';
-                                echo '<p>' . $post_content . '</p><p class="more"><a class="more" href="' . get_page_link($id) . '" >MORE</a></p>';
+                                echo '<p>' . $post_content . ' <a href="' . get_page_link($id) . '" >Read more.</a></p><hr>';
                                 echo '</div>';
                                 echo '</div>';
 
