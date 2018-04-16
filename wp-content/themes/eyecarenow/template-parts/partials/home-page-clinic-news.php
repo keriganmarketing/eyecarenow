@@ -8,7 +8,7 @@
 ?>
 
 <div class="container">
-    <h2></h2>
+    <h2 class="is-semibold is-secondary line-right">News & Info</h2>
 
     <div class="article-container">
         <div class="columns is-multiline">

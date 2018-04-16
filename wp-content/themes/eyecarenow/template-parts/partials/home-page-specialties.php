@@ -75,7 +75,7 @@
 
 <div class="container">
 
-    <h2 class="line-right light">Services</h2>
+    <h2 class="is-semibold is-white line-right">Services</h2>
 
     <div class="specialties-grid columns is-multiline is-justified is-aligned is-centered">
 

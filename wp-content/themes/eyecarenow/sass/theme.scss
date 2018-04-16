@@ -404,6 +404,17 @@ nav.post-navigation {
   height: auto;
   outline: none;
   clear: both;
+
+  .mega-menu-toggle {
+    .mega-toggle-blocks-right {
+      background: rgba(0, 0, 0, .2);
+      .mega-toggle-label {
+        font-weight: bold;
+        font-size: 18px !important;
+      }
+    }
+  }
+
   #mega-menu-primary {
     font-family: $font_family_2;
     position: relative;
@@ -490,6 +501,14 @@ nav.post-navigation {
 
     }
   }
+}
+
+h2.is-bold {
+  font-weight: $weight-bold;
+}
+
+h2.is-white {
+  color: $white;
 }
 
 #featured-image {
@@ -1233,7 +1252,6 @@ ul.dpe-flexible-posts {
   }
 
   h2 {
-    font-weight: 200;
     margin: 4rem 2rem;
     font-size: 20px;
 
@@ -1257,7 +1275,7 @@ ul.dpe-flexible-posts {
     font-size: 30px;
 
     @media screen and (min-width: $tablet) {
-      font-size: 50px;
+      font-size: 40px;
     }
 
     span {
@@ -1395,9 +1413,13 @@ ul.dpe-flexible-posts {
 
         .button-label {
           color: $primary;
-          font-size: 12px;
+          font-size: 16px;
           padding: 1rem 0;
           font-weight: $weight-semibold;
+
+          @media screen and (min-width: $desktop){
+            font-size: 13px;
+          }
         }
 
       }
