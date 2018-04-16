@@ -75,9 +75,14 @@ get_header(); ?>
                                     $post_content = substr($post_content, 0, strpos($post_content, "\n")) . '...';
                                 }
 
+                                $thumbnail = get_the_post_thumbnail($id,'thumbnail');
+
+                                //echo '<pre>',print_r($thumbnail),'</pre>';
+
                                 echo '<div id="doctor' . $id . '" class="col res-12 wide-12 ph-1" >';
                                 echo '<div class="post-thumbnail col res-13 wide-13 ph-1">';
-                                echo '<img src="' . $headshot['url'] . '" alt="' . $headshot['alt'] . '" />';
+                                echo $thumbnail;
+                                //echo '<img src="' . $headshot['url'] . '" alt="' . $headshot['alt'] . '" />';
                                 echo '</div><div class="post-text col res-23 wide-23 ph-1">';
                                 echo '<h2><a href="' . get_page_link($id) . '">' . $doctor->post_title . '</a></h2>';
                                 echo '<p>' . $post_content . '</p><p class="more"><a class="more" href="' . get_page_link($id) . '" >MORE</a></p>';
