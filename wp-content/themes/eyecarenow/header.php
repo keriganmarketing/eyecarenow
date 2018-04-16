@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>">
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places&language=en&key=AIzaSyB8L8y5zfQIVoEQ-M1x74lRcygaONmlKUI"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&language=en&key=AIzaSyB8L8y5zfQIVoEQ-M1x74lRcygaONmlKUI"></script>
 
     <?php wp_head(); ?>
 

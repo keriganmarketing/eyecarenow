@@ -17,7 +17,9 @@ get_header(); ?>
 
                 <?php if ($slider != '') { ?>
                     <div id="featured-image">
-
+                        <link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/inc/flexslider/flexslidermin.css" type="text/css">
+                        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+                        <script src="<?php echo get_template_directory_uri() ?>/inc/flexslider/jquery.flexslider-min.js"></script>
                         <div class="flexslider">
                             <ul class="slides">
                                 <?php
