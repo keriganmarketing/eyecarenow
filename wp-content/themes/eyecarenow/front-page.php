@@ -26,7 +26,7 @@ get_header(); ?>
                             </div>
                             <div class="column is-3">
                                 <p><a href="/our-doctors/" class="button is-primary is-fullwidth has-shadow">OUR DOCTORS &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a></p>
-                                <p><a href="/contact/" class="button is-secondary is-fullwidth has-shadow">CONTACT &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a></p>
+                                <p><a href="/contact-locations/" class="button is-secondary is-fullwidth has-shadow">CONTACT US &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a></p>
                             </div>
                         </div>
                     </div>

@@ -36,6 +36,22 @@
   border-radius: 1rem;
 }
 
+.is-secondary {
+  color: $secondary;
+}
+
+.is-primary {
+  color: $primary;
+}
+
+.is-info {
+  color: $info;
+}
+
+.is-tertiary {
+  color: $tertiary;
+}
+
 .button.is-secondary {
   background-color: $secondary;
   color: $white;
