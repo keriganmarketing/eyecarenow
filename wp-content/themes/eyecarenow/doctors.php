@@ -81,11 +81,11 @@ get_header(); ?>
 
                                 echo '<div id="doctor' . $id . '" class="col res-12 wide-12 ph-1" >';
                                 echo '<div class="post-thumbnail col res-13 wide-13 ph-1">';
-                                echo $thumbnail;
+                                echo '<a href="' . get_page_link($id) . '">' . $thumbnail . '</a>';
                                 //echo '<img src="' . $headshot['url'] . '" alt="' . $headshot['alt'] . '" />';
                                 echo '</div><div class="post-text col res-23 wide-23 ph-1">';
                                 echo '<h2><a href="' . get_page_link($id) . '">' . $doctor->post_title . '</a></h2>';
-                                echo '<p>' . $post_content . ' <a href="' . get_page_link($id) . '" >Read more.</a></p><hr>';
+                                echo '<p>' . $post_content . ' <a class="is-primary" href="' . get_page_link($id) . '" >read more.</a></p><hr>';
                                 echo '</div>';
                                 echo '</div>';
 
