@@ -12,6 +12,8 @@ get_header(); ?>
                 <div id="content-left" class="col res-1 tab-1 wide-1 ph-1">
                     <div id="primary" class="content-area">
                         <main id="blog" class="site-blog" role="blog">
+                            <div style="width:95%;  margin:10px auto 30px;"><var data-presentation="6958f29a-4863-4a5e-48d3-4658449b4f6f" style="width:100%;padding-bottom:60%;display:block;"><a href="//showecho.com/theater/6958f29a-4863-4a5e-48d3-4658449b4f6f" style="display:none">View Video</a></var><script type="text/javascript" src="//eyemag.in/bed"></script></div>
+                            <hr>
                             <?php
 
                             $args = [
