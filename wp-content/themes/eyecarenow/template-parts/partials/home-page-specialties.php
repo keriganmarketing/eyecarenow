@@ -54,7 +54,7 @@
                 </a>
             </div>
             <div class="patient-survey column">
-                <a href="/patient-center/patient-survey/" class="portal-button">
+                <a href="/patient-center/accepted-health-plans/" class="portal-button">
                                 <span class="icon">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 56"><path
                                                 d="M10.08,13.92H27.89a1.79,1.79,0,0,0,1.78-1.79V7.6a1.79,1.79,0,0,0-1.78-1.79H24.56c0-.07,0-.14,0-.21a5.58,5.58,0,1,0-11.16,0c0,.07,0,.14,0,.21H10.08A1.79,1.79,0,0,0,8.3,7.6v4.53A1.79,1.79,0,0,0,10.08,13.92ZM19,1.3a1.52,1.52,0,1,1-1.52,1.52A1.52,1.52,0,0,1,19,1.3Z"/><path
@@ -66,7 +66,7 @@
                                                 d="M6.37,43.21,4.82,44.34l2.73,3.8L8.33,47c1.57-2.24,3.19-4.36,4.93-6.46l-1.47-1.23c-1.5,1.8-2.89,3.61-4.25,5.49Z"/><path
                                                 d="M35.26,8.91h-3.8v1.92h3.8a.83.83,0,0,1,.82.83v41.6a.83.83,0,0,1-.82.83H2.74a.83.83,0,0,1-.82-.83V11.66a.83.83,0,0,1,.82-.83h3.8V8.91H2.74A2.75,2.75,0,0,0,0,11.66v41.6A2.75,2.75,0,0,0,2.74,56H35.26A2.75,2.75,0,0,0,38,53.25V11.66A2.75,2.75,0,0,0,35.26,8.91Z"/></svg>
                                 </span>
-                    <span class="button-label">PATIENT CARE SURVEY</span>
+                    <span class="button-label">ACCEPTED HEALTH PLANS</span>
                 </a>
             </div>
         </div>
