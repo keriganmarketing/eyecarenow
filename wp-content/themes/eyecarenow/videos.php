@@ -16,7 +16,7 @@ get_header(); ?>
                                 <var data-presentation="6958f29a-4863-4a5e-48d3-4658449b4f6f" style="width:100%;padding-bottom:60%;display:block;">
                                     <a href="//showecho.com/theater/6958f29a-4863-4a5e-48d3-4658449b4f6f" style="display:none">View Video</a>
                                 </var>
-                                <script type="text/javascript" src="//eyemag.in/bed" async defer></script></div>
+                                <script type="text/javascript" src="//rendia.com/whitelabel/embed_js"></script></div>
                             <hr>
                             <?php
 
