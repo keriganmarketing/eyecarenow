@@ -32,7 +32,7 @@ get_header(); ?>
                     </div>
                     <div class="section-wrapper feature-boxes">
                         <div class="container">
-                            <div class="columns is-multiline is-justified is-aligned">
+                            <div class="columns is-multiline is-justified">
                                 <div class="column is-6-desktop">
                                     <?php
                                         $id = 24;
@@ -40,7 +40,7 @@ get_header(); ?>
                                         $photo = get_field('photo',$id);
                                         $info = get_field('summary_text',$id);
                                     ?>
-                                    <div class="card">
+                                    <div class="card is-fullheight">
                                         <div class="card-image">
                                             <img src="<?php echo $photo['url']; ?>" alt="<?php echo $photo['alt']; ?>">
                                         </div>
@@ -58,7 +58,7 @@ get_header(); ?>
                                     $photo = get_field('photo',$id);
                                     $info = get_field('summary_text',$id);
                                     ?>
-                                    <div class="card">
+                                    <div class="card is-fullheight">
                                         <div class="card-image">
                                             <img src="<?php echo $photo['url']; ?>" alt="<?php echo $photo['alt']; ?>">
                                         </div>
