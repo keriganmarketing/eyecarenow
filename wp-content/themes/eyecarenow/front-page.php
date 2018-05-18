@@ -45,7 +45,7 @@ get_header(); ?>
                                             <img src="<?php echo $photo['url']; ?>" alt="<?php echo $photo['alt']; ?>">
                                         </div>
                                         <div class="card-content">
-                                            <h3 class="title is-semibold"><?php echo get_the_title($id); ?></h3>
+                                            <h3 class="title is-semibold fancy"><?php echo get_the_title($id); ?></h3>
                                             <p class="has-text-centered"><?php echo $info; ?></p>
                                             <p class="has-text-centered"><a href="<?php echo $link; ?>" class="button is-primary is-caps">Learn More &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a></p>
                                         </div>
@@ -63,7 +63,7 @@ get_header(); ?>
                                             <img src="<?php echo $photo['url']; ?>" alt="<?php echo $photo['alt']; ?>">
                                         </div>
                                         <div class="card-content">
-                                            <h3 class="title is-semibold"><?php echo get_the_title($id); ?></h3>
+                                            <h3 class="title is-semibold fancy"><?php echo get_the_title($id); ?></h3>
                                             <p class="has-text-centered"><?php echo $info; ?></p>
                                             <p class="has-text-centered"><a href="<?php echo $link; ?>" class="button is-primary is-caps">Learn More &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a></p>
                                         </div>

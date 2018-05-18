@@ -429,3 +429,39 @@ function myfeed_request($qv)
 
 add_filter('request', 'myfeed_request');
 
+add_shortcode('feature_boxes', function ($atts) {
+
+    $sidebarbuttons = get_field('sidebar_buttons');
+    $templateOutput = '<div class="section-wrapper support feature-boxes"><div class="columns is-multiline is-justified">';
+
+    foreach($sidebarbuttons as $sidebar){ 
+        $id = $sidebar->ID;
+        $link = get_field('page_link',$id);
+        $link = (strpos($link, 'anchor') !== false ? '#'.$sidebar->post_name : $link);
+        $photo = get_field('photo',$id);
+        $info = get_field('summary_text',$id);
+    
+        $templateOutput .= '<div class="column is-6 is-3-widescreen">
+            <div class="card is-fullheight">
+                <div class="card-image">
+                    <div class="image is-4by3 is-background" style="background-image: url('.$photo['url'].');">
+                    </div>
+                </div>
+                <div class="card-content small has-text-centered">
+                    <div>
+                        <h3 class="title is-semibold not-fancy">'.get_the_title($id).'</h3>
+                        <p class="has-text-centered">'.$info.'</p>
+                    </div>
+                    <p class="has-text-centered" style="justify-self: flex-end;">
+                        <a href="'.$link.'" class="button is-primary is-caps">Learn More &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a>
+                    </p>
+                </div>
+            </div>
+        </div>';
+        
+    }
+
+    $templateOutput .= '</div></div>';
+
+    return $templateOutput;
+});

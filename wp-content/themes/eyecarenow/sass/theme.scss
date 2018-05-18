@@ -95,18 +95,22 @@ h3 {
 }
 
 #mid {
-  background: rgb(220, 215, 209);
-  background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2RjZDdkMSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-  background: -moz-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(220, 215, 209, 1)), color-stop(100%, rgba(255, 255, 255, 1)));
-  background: -webkit-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -o-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: -ms-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  background: linear-gradient(to bottom, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dcd7d1', endColorstr='#ffffff', GradientType=0);
+  background: rgba(220, 215, 209, .8);
   position: relative;
   z-index: 10;
   padding: 0;
+
+  @media screen and (min-width: $desktop){
+    background: rgb(220, 215, 209);
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2RjZDdkMSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(220, 215, 209, 1)), color-stop(100%, rgba(255, 255, 255, 1)));
+    background: -webkit-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -o-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: -ms-linear-gradient(top, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    background: linear-gradient(to bottom, rgba(220, 215, 209, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dcd7d1', endColorstr='#ffffff', GradientType=0);
+  }
 }
 
 .container {
@@ -788,7 +792,8 @@ a.more {
 }
 
 p {
-  line-height: 1.4em;
+  line-height: 1.7em;
+  font-size: 1.1em;
 }
 
 span.gform_description {
@@ -1160,7 +1165,7 @@ ul.dpe-flexible-posts {
 #wrapper {
   .section-wrapper {
     clear: both;
-    overflow: hidden;
+    // overflow: hidden;
     position: relative;
     z-index: 1;
   }
@@ -1230,12 +1235,53 @@ ul.dpe-flexible-posts {
       color: #FFF !important;
     }
   }
+
+  .centered-image-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      margin: 2rem 1.25rem;
+    }
+  }
+
+  h2.has-underline {
+    text-align: center;
+    text-transform: uppercase;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid #ddd;
+    color: #70ab97;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 3rem 0 1rem;
+
+  }
+
+  p.cta-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin:2rem 0 1rem;
+
+    a.button {
+      margin-right: 20px;
+    }
+  }
+}
+
+.support-page-text {
+  padding: 0 .75rem;
+  @media screen and (min-width: $widescreen) {
+    padding: 0;
+  }
 }
 
 .home {
 
   .home-page-text {
-    padding: 0 .75rem;
+    padding: 0 1rem;
     @media screen and (min-width: $widescreen) {
       padding: 0;
     }
@@ -1320,32 +1366,57 @@ ul.dpe-flexible-posts {
       font-size: 1.1em;
       line-height: 1.35em;
 
+      &.small {
+        font-size: 1em;
+        line-height: 1.2em;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+
+        * {
+          margin: 0;
+        }
+
+        p {
+          padding: 0 0 .75rem;
+          font-weight: normal;
+        }
+      }
+
       .title {
         color: $secondary;
-        font-size: 1.3rem;
         margin-bottom: .5rem;
         text-align: center;
+        font-size: 1.3rem;
 
-        @media screen and (min-width: $tablet){
-          display: inline-block;
-          margin-bottom: 1.5rem;
-          font-size: 1.5rem;
-          width: 92%;
-          background-color: #FFF;
-          margin-top: -5rem;
-          position: absolute;
-          padding: .75rem 0;
+        &.fancy {
+          @media screen and (min-width: $tablet){
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            width: 92%;
+            background-color: #FFF;
+            margin-top: -5rem;
+            position: absolute;
+            padding: .75rem 0;
+          }
+
+          @media screen and (min-width: $desktop){
+            font-size: 2rem;
+          }
         }
 
         @media screen and (min-width: $desktop){
-          font-size: 2rem;
+          font-size: 1.5rem;
         }
       }
+
       h3.title::after {
         content: "";
         display: block;
         background: #b7c3dd;
-        height: 8px;
+        height: 6px;
         width: 100px;
         margin: 17px auto 5px;
       }
