@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "34500be9f34ad629b1ecd3adc65288dd",
@@ -226,12 +226,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kerigansolutions/fb-autoblog-wp.git",
-                "reference": "e845284c7fa6a5f7d9b75e14c42ad914f9ddeafa"
+                "reference": "f228d994648cd47553ac9c07fc50ba0267e583a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kerigansolutions/fb-autoblog-wp/zipball/e845284c7fa6a5f7d9b75e14c42ad914f9ddeafa",
-                "reference": "e845284c7fa6a5f7d9b75e14c42ad914f9ddeafa",
+                "url": "https://api.github.com/repos/kerigansolutions/fb-autoblog-wp/zipball/f228d994648cd47553ac9c07fc50ba0267e583a2",
+                "reference": "f228d994648cd47553ac9c07fc50ba0267e583a2",
                 "shasum": ""
             },
             "require": {
@@ -254,7 +254,7 @@
                     "email": "daron.adkins@gmail.com"
                 }
             ],
-            "time": "2018-03-23 16:54:28"
+            "time": "2018-06-07T20:56:20+00:00"
         },
         {
             "name": "nesbot/carbon",
