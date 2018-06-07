@@ -1,10 +1,17 @@
 <?php
+use Includes\Modules\KMAFacebook\FacebookController;
+
+$facebook = new FacebookController();
+$feed = $facebook->getFeed(3);
+
 /**
  * @package KMA
  * @subpackage kmaslim
  * @since 1.0
  * @version 1.2
  */
+
+if($feed->posts){
 ?>
 
 <div class="container">
@@ -12,8 +19,15 @@
 
     <div class="article-container">
         <div class="columns is-multiline">
-            <?php include(locate_template('template-parts/partials/facebook-module.php')); ?>
+            <?php 
+            foreach ($feed->posts as $fbPost) {
+
+                include(locate_template('template-parts/partials/mini-facebook-article.php'));
+
+            }
+            ?>
         </div>
     </div>
     <p class="has-text-centered"><a href="/news-community/" class="button is-primary is-caps" style="margin-bottom: 35px;">Read all news &nbsp;<i class="fa fa-play" aria-hidden="true"></i></a></p>
 </div>
+<?php }?>
