@@ -1170,8 +1170,11 @@ ul.dpe-flexible-posts {
     z-index: 1;
   }
 
+  .input, 
+  .textarea,
   .button {
     height: 2.75rem;
+    padding: 3px 15px !important;
   }
 }
 
