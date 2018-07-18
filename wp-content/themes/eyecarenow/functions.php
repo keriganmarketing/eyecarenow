@@ -507,17 +507,17 @@ add_shortcode('mailchimp_coupons', function ($atts) {
 
         switch ($response) {
             case 'new':
-                $message = 'Thanks for registering for coupons from The Eye Center of North Florida! We\'ve included your coupons below. See you soon!';
+                $message = 'Thanks for registering for Optical Shop offers from The Eye Center of North Florida! We\'ve included your coupons below. See you soon!';
                 $showCoupons = true;
                 $mailChimp->addSubscriber($dataSubmitted['email_address'], $options);
                 break;
             case 'subscribed':
-                $message = 'You were already on our list, but here are our coupons again anyway. See you soon!';
+                $message = 'Thanks for registering, but you were already on our list. We\'ve included your coupons below. See you soon!';
                 $showCoupons = true;
                 $mailChimp->updateSubscriber($dataSubmitted['email_address'], $options);
                 break;
             case 'unsubscribed':
-                $message = 'Glad to see you back. Since you have activated your registration once more, we\'ve included our coupons below.';
+                $message = 'Glad to see you back. Since you have activated your registration once more, we\'ve included your coupons below.';
                 $showCoupons = true;
                 $mailChimp->updateSubscriber($dataSubmitted['email_address'], $options);
                 break;
