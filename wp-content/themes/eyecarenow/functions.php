@@ -11,6 +11,7 @@ use Includes\Modules\Helpers\CleanWP;
 //use Includes\Modules\Locations\Locations;
 use Includes\Modules\Social\SocialSettingsPage;
 use Includes\Modules\KMAFacebook\FacebookController;
+use Includes\Modules\Helpers\MailChimp;
 
 require('vendor/autoload.php');
 
@@ -464,4 +465,126 @@ add_shortcode('feature_boxes', function ($atts) {
     $templateOutput .= '</div></div>';
 
     return $templateOutput;
+});
+
+add_shortcode('mailchimp_coupons', function ($atts) {
+
+    $signupForm = '
+    <form method="post">
+        <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="sec" tabindex="-1" value=""></div>
+        <div class="columns is-multiline is-aligned">
+            <div class="column is-12-mobile is-12-tablet is-6-desktop is-3-widescreen">
+                <input type="email" value="" name="email_address" class="required email input" id="mce-EMAIL" placeholder="Email address">
+            </div>
+            <div class="column is-narrow">
+                <button type="submit" name="subscribe" class="button is-primary is-caps" >Sign up</button>
+            </div>
+        </div>
+    </form>
+    <p>&nbsp;</p>';
+
+    if(isset($_POST['sec']) && $_POST['sec'] == ''){
+        $mailChimp = new MailChimp;
+
+        $dataSubmitted = $_POST;
+
+        //check to see what status of email address is in MailChimp
+        $response = $mailChimp->handleSubscriber($dataSubmitted['email_address']);
+
+        $output = '';
+        $showCoupons = false;
+        $showForm = false;
+
+        $headers = [
+            'User-Agent' => 'testing/1.0',
+            'Accept'     => 'application/json'
+        ];
+
+        $details = [
+            'email_address' => $dataSubmitted['email_address'],
+            'status'        => 'subscribed'
+        ];
+
+        switch ($response) {
+            case 'new':
+                $message = 'Thanks for registering for coupons from The Eye Center of North Florida! We\'ve included your coupons below. See you soon!';
+                $showCoupons = true;
+                $mailChimp->addSubscriber($dataSubmitted['email_address'], $options);
+                break;
+            case 'subscribed':
+                $message = 'You were already on our list, but here are our coupons again anyway. See you soon!';
+                $showCoupons = true;
+                $mailChimp->updateSubscriber($dataSubmitted['email_address'], $options);
+                break;
+            case 'unsubscribed':
+                $message = 'Glad to see you back. Since you have activated your registration once more, we\'ve included our coupons below.';
+                $showCoupons = true;
+                $mailChimp->updateSubscriber($dataSubmitted['email_address'], $options);
+                break;
+            case 'cleaned':
+                $message = 'Glad to see you back, but the provided email address has been purged from our records due to delivery issues. Consider using a different email address.';
+                $showForm = true;
+                break;
+            case 'pending':
+                $message = 'Your registration is still pending activation. Check your email for the verification link. While you wait, we\'ve included our coupons below.';
+                $showCoupons = true;
+                break;
+            default:
+                $mailChimp->updateSubscriber($dataSubmitted['email_address'], $options);
+                $showCoupons = true;
+                $message = 'Thanks for subscribing!';
+            }
+
+        $output .= '
+        <div class="message">
+            <div class="message-body">
+                <p style="margin:0;">'.$message.'</p>
+            </div>
+        </div>
+        ';
+
+        if($showForm){
+            $output .= $signupForm;
+        }
+
+        if($showCoupons){
+            $output .= '
+            <div class="columns is-multiline is-aligned">
+                <div class="column is-6-tablet is-4-desktop"> 
+                    <div class="card" >
+                        <div class="card-image">
+                            <figure class="image" style="margin:0">
+                                <img src="https://www.eyecarenow.com/wp-content/uploads/EyeCenter_20-Off-Web-Coupon.jpg" alt="Use coupon code: MKT 20">
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-6-tablet is-4-desktop"> 
+                    <div class="card" >
+                        <div class="card-image">
+                            <figure class="image" style="margin:0">
+                                <img src="https://www.eyecarenow.com/wp-content/uploads/EyeCenter_50d-Off-Web-Coupon.jpg" alt="Use coupon code: MKT 50">
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-6-tablet is-4-desktop"> 
+                    <div class="card" >
+                        <div class="card-image">
+                            <figure class="image" style="margin:0">
+                                <img src="https://www.eyecarenow.com/wp-content/uploads/EyeCenter_BOGO-Web-Coupon.jpg" alt="Use coupon code: MKT BOGO">
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p>&nbsp;</p>
+            ';
+        }
+
+    }else{
+        $output = '<p>Sign up to receive our limited-time Optical Shop offers!</p>' . $signupForm;
+    }
+
+    return $output;
 });
