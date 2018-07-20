@@ -50,11 +50,13 @@ $youtube  = get_field('youtube_link', '15');
             <div class="info-wrap">
                 <div id="copyright" class="col res-12 tab-12 wide-1 ph-1"><p>
                         &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?> | <a
-                                href="/patient-center/privacy-policy">Privacy Policy</a> | <a href="/sitemap_index.xml">Sitemap</a>
+                                href="/patient-center/privacy-policy/">Privacy Policy</a> | <a href="/sitemap_index.xml">Sitemap</a>
                     </p></div>
                 <div id="siteby" class="col res-12 tab-12 wide-1 ph-1"><p><img
+                                title="Site by Kerigan Marketing Associates"
+                                alt="Site by Kerigan Marketing Associates"
                                 src="<?php echo get_template_directory_uri() ?>/images/kma.png"/> Site by <a
-                                href="http://keriganmarketing.com">KMA</a>.</p></div>
+                                href="https://keriganmarketing.com">KMA</a>.</p></div>
             </div>
         </div>
     </div><!-- .container -->

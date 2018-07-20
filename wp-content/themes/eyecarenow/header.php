@@ -53,7 +53,7 @@
                 <a class="skip-link screen-reader-text" href="#content"><?php _e('Skip to content', 'cc'); ?></a>
                 <header id="masthead" class="site-header" role="banner">
                     <div id="phone-button" class="col res-13 tab-12 ph-1 right ph-center">
-                        <div id="searchbox"><?php get_search_form(); ?></div>
+                        <div id="searchbox" class="is-hidden-mobile"><?php get_search_form(); ?></div>
                         <a href="tel:<?php echo get_field('main_phone_number',
                             15); ?>"><?php echo get_field('main_phone_number', 15); ?></a>
                     </div>
