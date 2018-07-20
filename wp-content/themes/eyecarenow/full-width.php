@@ -15,7 +15,7 @@ get_header(); ?>
         <main id="main" class="site-main" role="main">
             <div id="mid">
                 <div class="mast-container">
-                    <img src="<?php echo $header_photo['url']; ?>" alt="<?php echo $header_photo['alt']; ?>"/>
+                    <img src="<?php echo $header_photo['url']; ?>" alt="<?php echo $header_photo['alt']; ?>" title="<?php echo $header_photo['title']; ?>" />
                 </div>
                 <div id="content" class="section-wrapper site-content">
                     <div class="container support-page-text">
