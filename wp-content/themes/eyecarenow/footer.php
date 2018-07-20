@@ -30,16 +30,6 @@ $youtube  = get_field('youtube_link', '15');
         </div>
         <div id="footer-col4" class="col res-14 large-34 ph-1 has-text-centered has-text-right-desktop">
             <h4 class="footer-label">Connect with Us</h4>
-<!--            <p id="socialmedia">-->
-<!--                --><?php //if ($facebook != '') { ?><!--<a target="_blank" title="Follow on Facebook"-->
-<!--                                                  href="http://facebook.com/--><?php //echo $facebook; ?><!--" id="facebook" >-->
-<!--                        <span class="icon"></span><span class="text">Like us on <br/><strong>Facebook</strong></span>-->
-<!--                    </a>--><?php //} ?>
-<!--                --><?php //if ($youtube != '') { ?><!--<a target="_blank" title="Watch us on YouTube"-->
-<!--                                                 href="http://youtube.com/--><?php //echo $youtube; ?><!--" id="youtube" ><span-->
-<!--                                class="icon"></span><span class="text">Watch us on <br/><strong>Youtube</strong></span>-->
-<!--                    </a>--><?php //} ?>
-<!--            </p>-->
             <div class="social has-text-centered has-text-right-desktop">
                 <?php
                 $social      = new SocialSettingsPage();
