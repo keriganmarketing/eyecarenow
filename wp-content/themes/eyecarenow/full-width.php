@@ -19,9 +19,7 @@ get_header(); ?>
                 </div>
                 <div id="content" class="section-wrapper site-content">
                     <div class="container support-page-text">
-                                <h1 class="title is-primary"><?php the_title(); ?></h1>
-                                <?php the_content(); ?>
-
+                        <?php the_content(); ?>
                     </div>
                 </div>
             </div>
