@@ -23,6 +23,10 @@ $background_color_1: #d8d3ce;
 $background_color_2: #8a8076;
 $border_color_1: transparent;
 
+.has-background-primary {
+  background-color: rgb(13, 98, 76);
+}
+
 body {
   background-image: none !important;
   background-color: $background_color_1 !important;

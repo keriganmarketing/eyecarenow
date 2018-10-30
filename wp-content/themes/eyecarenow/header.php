@@ -43,6 +43,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div id="wrapper">
     <div id="page" class="hfeed site">
         <div id="top">
+            <div class="py-2 has-background-primary has-text-white has-text-centered">
+                Due to Hurricane Michael, our Hwy 77 office and surgery center will be closed. If you need to be seen, please schedule an appointment at one of our satellite offices.
+            </div>
             <div class="container">
                 <a class="skip-link screen-reader-text" href="#content"><?php _e('Skip to content', 'cc'); ?></a>
                 <header id="masthead" class="site-header" role="banner">
