@@ -44,7 +44,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="page" class="hfeed site">
         <div id="top">
             <div class="py-2 has-background-primary has-text-white has-text-centered">
-                Due to Hurricane Michael, our Hwy 77 office and surgery center will be closed. If you need to be seen, please schedule an appointment at one of our satellite offices.
+                Due to Hurricane Michael, our Hwy 77 office and surgery center will be closed temporarily for repairs. We are open and seeing patients at our PCB, Chipley, and PSJ offices. For any eye care needs, please visit or call one of these offices for assistance.
             </div>
             <div class="container">
                 <a class="skip-link screen-reader-text" href="#content"><?php _e('Skip to content', 'cc'); ?></a>
