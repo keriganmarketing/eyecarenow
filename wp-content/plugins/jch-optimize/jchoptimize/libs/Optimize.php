@@ -32,6 +32,8 @@ class Optimize
         const BLOCK_COMMENTS = '/\*(?>[^/\*]++|//|\*(?!/)|(?<!\*)/)*+\*/';
         //regex for line comments
         const LINE_COMMENTS = '//[^\r\n]*+';
+	//regex for HTML comments
+	const HTML_COMMENTS = '(?:(?:<!--|(?<=[\s/^])-->)[^\r\n]*+)';
 
         protected $_debug    = false;
         protected $_regexNum = -1;
@@ -103,6 +105,7 @@ class Optimize
                 }
                 
                 $this->_debug($rx, $code, $regex_num);
+		//$error = array_flip(get_defined_constants(true)['pcre'])[preg_last_error()];
                 if (preg_last_error() != PREG_NO_ERROR) throw new \Exception;
 
                 return $op_code;

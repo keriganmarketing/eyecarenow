@@ -90,12 +90,18 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
                        // {
                        //         JchOptimizeHelper::checkModRewriteEnabled($this->params);
                        // }
+			$bCombineCss = (bool)$this->params->get('css', 1);
+			$bCombineJs  = (bool)$this->params->get('js', 1);
+
+
+			if ($bCombineCss || $bCombineJs)
+			{
+				$this->runCronTasks();
+			}
 
                         $replace_css_links = false;
-			$css_combined = false;
-			$js_combined = false;
 
-                        if ($this->params->get('css', 1) && !empty($aLinks['css']))
+                        if ($bCombineCss && !empty($aLinks['css']))
                         {
                                 $sCssCacheId = $this->getCacheId($aLinks['css']);
 				//Optimize and cache css files
@@ -124,11 +130,9 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
 					//the combined css file in the HTML
                                         $replace_css_links = true;
                                 }
-
-				$css_combined = true;
                         }
 
-                        if ($this->params->get('javascript', 1) && !empty($aLinks['js']))
+                        if ($bCombineJs && !empty($aLinks['js']))
                         {
                                 $sJsCacheId = $this->getCacheId($aLinks['js']);
 				//Optimize and cache javascript files
@@ -136,8 +140,6 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
 
 				//Insert link to combined javascript file in HTML
                                 $this->replaceLinks($sJsCacheId, 'js');
-
-				$js_combined = true;
                         }
 
                         if ($replace_css_links)
@@ -146,10 +148,6 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
                                 $this->replaceLinks($sCssCacheId, 'css');
                         }
 
-			if ($css_combined || $js_combined)
-			{
-				$this->runCronTasks();
-			}
                 }
 
                 if (!empty($aLinks['img']))
@@ -315,12 +313,12 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
         {
                 JCH_DEBUG ? JchPlatformProfiler::start('RunCronTasks') : null;
 
-                $sId = md5($this->oParser->sFileHash . 'CRONTASKS');
+                $sId = md5('CRONTASKS');
 
                 $aArgs = array($this->oParser);
 
                 $oCron     = new JchOptimizeCron($this->params);
-                $aFunction = array(&$oCron, 'runCronTasks');
+                $aFunction = array($oCron, 'runCronTasks');
 
 		try
 		{
@@ -394,9 +392,9 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
 			default:
 
 				$sPath = JchPlatformPaths::cachePath();
-				$sUrl = $sPath . '/' . $sId . '_JCHI.' . $sType;// . ($bGz ? '.gz' : ''); 
+				$sUrl = $sPath . '/' . $sType . '/' . $sId . '_JCHI.' . $sType;// . ($bGz ? '.gz' : ''); 
 
-				$this->createStaticFiles($sId, $sType);
+				$this->createStaticFiles($sId, $sType, $sUrl);
 
 				break;	
 		}
@@ -410,26 +408,27 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
         }
 
 	/**
+	 * Create static combined file if not yet exists
 	 *
 	 *
+	 * @param $sId   string  Cache id of file
+	 * @param $sType string  Type of file css|js
+	 * @param $sUrl  string  Url of combine file
 	 *
+	 * @return null
 	 */
-	protected function createStaticFiles($sId, $sType)
+	protected function createStaticFiles($sId, $sType, $sUrl)
 	{
                 JCH_DEBUG ? JchPlatformProfiler::start('CreateStaticFiles - ' . $sType) : null;
 
+		//Get the last file index saved for the type file, this will indicate how many combined files are on the page
 		$iIndex = $this->oParser->{'iIndex_' . $sType};
-		$sCacheFolder = JchPlatformPaths::cachePath(false);
 
-		if(!file_exists($sCacheFolder))
-		{
-			JchPlatformUtility::createFolder($sCacheFolder);
-		}
-
+		//Loop through index of each file
 		for($i = 0; $i <= $iIndex; $i++)
 		{
-			$sCombinedFile = $sCacheFolder . '/' . $sId . '_' . $i . '.' . $sType; 
-				//. ($this->isGZ() ? '.gz' : ''); 
+			//File path of combined file
+			$sCombinedFile = JchOptimizeHelper::getFilePath(str_replace('JCHI', $i, $sUrl));
 
 			if(!file_exists($sCombinedFile))
 			{
@@ -446,7 +445,13 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
 					throw new Exception('Error retrieving combined contents');
 				}
 
-				JchPlatformUtility::write($sCombinedFile, $sContent);
+				//Create file and any directory
+				if(!JchPlatformUtility::write($sCombinedFile, $sContent))
+				{
+					JchPlatformCache::deleteCache();
+
+					throw new Exception('Error creating static file');
+				}
 			}
 		}
 
@@ -484,33 +489,44 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
                 $sUrl  = $this->buildUrl($sId, $sType);
 
                 $sNewLink = str_replace('URL', $sUrl, $sLink);
+		$sSection = $this->params->get('pro_bottom_js', '0') == '1' ? 'body' : 'head';
 
-		//If files were excluded while preserving execution order and a combined js file falls below the last excluded file,
-		//or if no files were excluded, we may need to add the async attribute or place it at the bottom 
+		//If the last javascript file on the HTML page was not excluded while preserving 
+		//execution order, we may need to place it at the bottom and add the async
+		//or defer attribute 
 		if($sType == 'js' && !$this->oParser->bExclude_js)
 		{
 			//Get last js index
 			$iIndex = $this->oParser->iIndex_js;
 			$sNewLinkLast = str_replace('JCHI', $iIndex, $sNewLink);
 
-			//Place last combined js file at bottom of page if option is set
-			if ($this->params->get('pro_bottom_js', '0') == '1')
+			//If last combined file is being inserted at the bottom of the page then
+			//add the async or defer attribute
+			if ($sSection == 'body')
 			{
 				//Add async attribute to last combined js file if option is set
 				$sNewLinkLast = str_replace('></script>', $this->getAsyncAttribute($iIndex) . '></script>', $sNewLinkLast);
-				$sSearchArea = preg_replace('#' . self::getEndBodyTag() . '#i', $this->sTab . $sNewLinkLast . $this->sLnEnd . '</body>', 
-					$sSearchArea, 1);
 			}
-			//Or put it at the bottom of the HEAD section
-			else
+
+			//Insert script tag at the appropriate section in the HTML
+			$sSearchArea = preg_replace('#' . self::{'getEnd'. ucfirst($sSection) . 'Tag'}() . '#i', $this->sTab . $sNewLinkLast . $this->sLnEnd . '</'. $sSection . '>', $sSearchArea, 1); 
+		}
+
+		//We also now append any deferred javascript files below the 
+		//last combined javascript file
+		if($sType == 'js')
+		{
+			$aDefers = $this->oParser->getDeferredFiles();
+
+			if(!empty($aDefers))
 			{
-				$sSearchArea = preg_replace('#' . self::getEndHeadTag() . '#i', $this->sTab . $sNewLinkLast . $this->sLnEnd . '</head>', 
-					$sSearchArea, 1);
+				$sDefers = implode($this->sLnEnd, $aDefers);
+				$sSearchArea = preg_replace('#' . self::{'getEnd' . ucFirst($sSection) . 'Tag'}() . '#i', $this->sTab . $sDefers . $this->sLnEnd . '</' . $sSection . '>', $sSearchArea, 1);
 			}
 		}
 
-		$sSearchArea = preg_replace_callback('#<JCH_' . strtoupper($sType) . '([^>]++)>#',
-									   function($aM) use ($sNewLink)
+		//Replace placeholders in HTML with combined files
+		$sSearchArea = preg_replace_callback('#<JCH_' . strtoupper($sType) . '([^>]++)>#', function($aM) use ($sNewLink)
 		{
 			return str_replace('JCHI', $aM[1], $sNewLink);
 		}, $sSearchArea);
@@ -532,7 +548,7 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
         {
                 $bCached   = JchPlatformCache::getCallbackCache($sId, $aFunction, $aArgs);
 
-                if ($bCached === FALSE)
+		if ($bCached === FALSE) 
                 {
                         throw new Exception('Error creating cache file');
                 }
@@ -568,7 +584,7 @@ class JchOptimizeLinkBuilder extends JchOptimizelinkBuilderBase
          */
         protected function cleanScript($sScript)
         {
-                if (!$this->isXhtml())
+                if (!JchOptimizeHelper::isXhtml($this->oParser->sHtml))
                 {
                         $sScript = str_replace(array('<script type="text/javascript"><![CDATA[', ']]></script>'),
                                                array('<script type="text/javascript">', '</script>'), $sScript);

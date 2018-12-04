@@ -1,5 +1,4 @@
 <?php
-
 /**
  * JCH Optimize - Aggregate and minify external resources for optmized downloads
  * 
@@ -36,9 +35,13 @@ class JchOptimizeParser extends JchOptimizeBase
 
         /** @var array    Array of css or js urls taken from head */
         protected $aLinks = array();
+
+	/** @var array Array of javascript files with the defer attribute */
+	protected $aDefers = array();
         protected $aUrls  = array();
         protected $oFileRetriever;
 	protected $sRegexMarker = 'JCHREGEXMARKER';
+	protected $containsgf = array();
         public $params    = null;
         public $sLnEnd    = '';
         public $sTab      = '';
@@ -49,8 +52,8 @@ class JchOptimizeParser extends JchOptimizeBase
 	public $bExclude_js  = false;
 	public $bExclude_css = false;
 
-	public $sAttributeRegex = '[^\s/"\'=<>]*+(?:\s*=(?:\s*+"[^"]*+"|\s*+\'[^\']*+\'|[^\s>]*+[\s>]))?';
-	public $sAttributeValueRegex = '(?:(?<=")[^"]*+|(?<=\')[^\']*+|(?<==)[^\s*+>]*+)'; 
+	public $sAttributeRegex = '[^\s/"\'=<>]*+(?:\s*=(?>\s*+"[^">]*+"|\s*+\'[^\'>]*+\'|[^\s>]*+[\s>]))?';
+	public $sAttributeValueRegex = '(?>(?<=")[^">]*+|(?<=\')[^\'>]*+|(?<==)[^\s*+>]*+)'; 
 
         /**
          * Constructor
@@ -73,6 +76,14 @@ class JchOptimizeParser extends JchOptimizeBase
                         $oUri            = JchPlatformUri::getInstance();
                         $this->sFileHash = serialize($this->params->getOptions()) . JCH_VERSION . $oUri->toString(array('scheme', 'host'));
                 }
+
+		//Get array of filenames from cache that imports Google font files
+		$containsgf = JchPlatformCache::getCache('jch_hidden_containsgf');
+		//If cache is not empty save to class property
+		if ($containsgf !== false)
+		{
+			$this->containsgf = $containsgf;
+		}
 
 		$this->bAmpPage = (bool) preg_match('#<html [^>]*?(?:&\#26A1;|amp)(?: |>)#', $sHtml);
 
@@ -154,22 +165,17 @@ class JchOptimizeParser extends JchOptimizeBase
                                 return stripslashes($sScript);
                         }, $aExcludeScript);
 
-                        $aCBArgs['excludes']['js']         = array_merge($aExcludeJs, $aExJsComp,
-                                                                         array('.com/maps/api/js', '.com/jsapi', '.com/uds', 'typekit.net','cdn.ampproject.org', 'googleadservices.com/pagead/conversion'),
-
-
-
-                                                                         JchPlatformExcludes::head('js'));
-                        $aCBArgs['excludes']['css']        = array_merge($aExcludeCss, $aExCssComp, JchPlatformExcludes::head('css'));
-                        $aCBArgs['excludes']['js_script']  = $aExcludeScript;
+                        $aCBArgs['excludes']['js'] = array_merge($aExcludeJs, $aExJsComp, array('.com/maps/api/js', '.com/jsapi', '.com/uds', 'typekit.net','cdn.ampproject.org', 'googleadservices.com/pagead/conversion'), JchPlatformExcludes::head('js'));
+                        $aCBArgs['excludes']['css'] = array_merge($aExcludeCss, $aExCssComp, JchPlatformExcludes::head('css'));
+                        $aCBArgs['excludes']['js_script'] = $aExcludeScript;
                         $aCBArgs['excludes']['css_script'] = $aExcludeStyle;
 
-                        $aCBArgs['removals']['js']  = JchOptimizeHelper::getArray($oParams->get('removeJs', ''));
+                        $aCBArgs['removals']['js'] = JchOptimizeHelper::getArray($oParams->get('removeJs', ''));
                         $aCBArgs['removals']['css'] = JchOptimizeHelper::getArray($oParams->get('removeCss', ''));
 
 			//These parameters will be excluded without preserving execution order
-                        $aExJsComp_ieo  = $this->getExComp($oParams->get('excludeJsComponents', ''));
-                        $aExcludeJs_ieo     = JchOptimizeHelper::getArray($oParams->get('excludeJs', ''));
+                        $aExJsComp_ieo = $this->getExComp($oParams->get('excludeJsComponents', ''));
+                        $aExcludeJs_ieo = JchOptimizeHelper::getArray($oParams->get('excludeJs', ''));
                         $aExcludeScript_ieo = JchOptimizeHelper::getArray($oParams->get('pro_excludeScripts'));
 
 			$aCBArgs['excludes_ieo']['js'] = array_merge($aExcludeJs_ieo, $aExJsComp_ieo);
@@ -200,8 +206,10 @@ class JchOptimizeParser extends JchOptimizeBase
 
                 $i  = $this->ifRegex();
                 $ns = '<noscript\b[^>]*+>(?><?[^<]*+)*?</noscript\s*+>';
+		$a  = $this->sAttributeRegex;
+		$sc = "<script\b(?=(?>\s*+$a)*?\s*+(?:type\s*=\s*(?!['\"]?(?:text|application)/javascript)))[^>]*+>(?><?[^<]*+)*?</script\s*+>";
 
-                $sRegex = "#(?>(?:<(?!!))?[^<]*+(?:$i|$ns|<!)?)*?\K(?:$j|$c|\K$)#six";
+                $sRegex = "#(?>(?:<(?!(?:!--|(?:no)?script\b)))?[^<]*+(?:$i|$ns|$sc|<!)?)*?\K(?:$j|$c|\K$)#six";
 
 
                 JCH_DEBUG ? JchPlatformProfiler::stop('InitSearch', TRUE) : null;
@@ -309,11 +317,6 @@ class JchOptimizeParser extends JchOptimizeBase
 
                 $aRemovals = array();
 
-               // if (isset($aCBArgs['removals']))
-               // {
-               //         $aRemovals = $aCBArgs['removals'];
-               // }
-
                 $sMedia = '';
 
                 if (($sType == 'css') && (preg_match('#media=(?(?=["\'])(?:["\']([^"\']+))|(\w+))#i', $aMatches[0], $aMediaTypes) > 0))
@@ -321,14 +324,24 @@ class JchOptimizeParser extends JchOptimizeBase
                         $sMedia .= $aMediaTypes[1] ? $aMediaTypes[1] : $aMediaTypes[2];
                 }
 
+		$a = $this->sAttributeRegex;
+
                 switch (true)
                 {
 			//These cases are being excluded without preserving execution order
                         case ($sUrl != '' && !JchOptimizeUrl::isHttpScheme($sUrl)):
 			case (!empty($sUrl) && !empty($aExcludes_ieo['js']) && JchOptimizeHelper::findExcludes($aExcludes_ieo['js'], $sUrl)):
                         case ($sDeclaration != '' && JchOptimizeHelper::findExcludes($aExcludes_ieo['js_script'], $sDeclaration, 'js')):
+			//Exclude javascript files with async attributes
 
 				return $aMatches[0];
+
+			//Remove deferred javascript files (without async attributes) and add them to the $aDefers array	
+			case ($sType == 'js' && preg_match("#<\w++\b(?!(?>\s*+$a)*?\s*+async\b)(?>\s*+$a)*?\s*+defer\b#i", $aMatches[0])):
+
+				$this->aDefers[] = $aMatches[0];
+
+				return '';
 
 			//These cases are being excluded while preserving execution order
                         case (($sUrl != '') && !$this->isHttpAdapterAvailable($sUrl)):
@@ -346,14 +359,18 @@ class JchOptimizeParser extends JchOptimizeBase
 						$this->sTab . $aMatches[0];
 				}
 
+				//Set the exclude flag so hereafter we know the last file was excluded while preserving
+				//the execution order
                                 $this->{'bExclude_' . $sType} = true;
 
                                 return $aMatches[0];
 
+			//Remove duplicated files from the HTML. We don't need duplicates in the combined files	
 			case (($sUrl != '') && $this->isDuplicated($sUrl)):
 
                                 return '';
 				
+			//These files will be combined	
                         default:
                                 $return = '';
 
@@ -415,30 +432,33 @@ class JchOptimizeParser extends JchOptimizeBase
         }
 
         /**
-         * 
-         * @param type $sUrl
-         * @return type
+	 * Generates a cache id for each matched file/script. If the files is associated with Google fonts, 
+	 * a browser hash is also computed.
+	 * 
+	 *
+         * @param array $aMatches	Array of files/scripts matched to be optimized and combined
+         * @return string		md5 hash for the cache id
          */
         protected function getFileID($aMatches)
         {
                 $id = '';
 
-                $containsgf = JchOptimizeHelper::getArray($this->params->get('hidden_containsgf', ''));
-
+		//If name of file present in match set id to filename
                 if (!empty($aMatches['url']))
                 {
 			$id .= $aMatches['url'];
 
+			//If file is a, or imports Google fonts, add browser hash to id 
                         if (strpos($aMatches['url'], 'fonts.googleapis.com') !== FALSE
-                                || in_array($aMatches['url'], $containsgf))
+                                || in_array($aMatches['url'], $this->containsgf))
                         {
                                 $browser = JchOptimizeBrowser::getInstance();
-
                                 $id .= $browser->getFontHash();
                         }
                 }
 		else
 		{
+			//No file name present so just use contents of declaration as id
 			$id .= $aMatches['content'];
 		}
 
@@ -446,8 +466,11 @@ class JchOptimizeParser extends JchOptimizeBase
         }
 
         /**
-         * 
-         * @param type $sUrl
+	 * Checks if a file appears more than once on the page so it's not duplciated in the combined files
+	 *
+	 *
+         * @param string $sUrl	Url of file
+	 * @return bool  	True if already included
          */
         public function isDuplicated($sUrl)
         {
@@ -463,8 +486,11 @@ class JchOptimizeParser extends JchOptimizeBase
         }
 
         /**
-         * 
-         * @param type $sPath
+         * Checks if plugin should exclude third party plugins/modules/extensions
+	 * 
+	 *
+	 * @param string $sPath	Filesystem path of file
+	 * @return bool		False will not exclude third party extension
          */
         protected function excludeExternalExtensions($sPath)
         {
@@ -473,7 +499,7 @@ class JchOptimizeParser extends JchOptimizeBase
                         return !JchOptimizeUrl::isInternal($sPath) || preg_match('#' . JchPlatformExcludes::extensions() . '#i', $sPath);
                 }
 
-                return FALSE;
+                return false;
         }
 
         /**
@@ -499,7 +525,7 @@ class JchOptimizeParser extends JchOptimizeBase
         }
 
         /**
-         * Fetches Class property containing array of matches of urls to be removed from HTML
+         * Fetches class property containing array of matches of urls to be removed from HTML
          * 
          * @return array
          */
@@ -508,10 +534,20 @@ class JchOptimizeParser extends JchOptimizeBase
                 return $this->aLinks;
         }
 
+	/**
+	 * Gets array of javascript files with the defer attributes
+	 *
+	 * @return array 
+	 */
+	public function getDeferredFiles()
+	{
+		return $this->aDefers;
+	}
+
         /**
          * Determines if document is of html5 doctype
          * 
-         * @return boolean
+         * @return boolean	True if doctype is html5
          */
         public function isHtml5()
         {
@@ -519,8 +555,9 @@ class JchOptimizeParser extends JchOptimizeBase
         }
 
         /**
-         * 
-         * @return string
+         * Retruns regex for content enclosed in conditional IE HTML comments 
+	 *
+         * @return string	Conditional comments regex
          */
         public static function ifRegex()
         {

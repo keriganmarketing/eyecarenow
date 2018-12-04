@@ -47,7 +47,7 @@ class JchOptimizeBase
 
 	protected function cleanRegexMarker($sHtml)
 	{
-		return preg_replace('#' . preg_quote($this->sRegexMarker) . '.*+$#', '', $sHtml);
+		return preg_replace('#' . preg_quote($this->sRegexMarker, '#') . '.*+$#', '', $sHtml);
 	}
 
 	public function setHeadHtml($sHtml)

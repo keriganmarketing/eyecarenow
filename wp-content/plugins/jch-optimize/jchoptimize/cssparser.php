@@ -28,15 +28,6 @@ class JchOptimizeCssParserBase extends JchOptimize\CSS_Optimize
          * 
          * @return type
          */
-        public static function staticFiles()
-        {
-                return array();
-        }
-
-        /**
-         * 
-         * @return type
-         */
         public static function fontFiles()
         {
                 return array();
@@ -69,7 +60,7 @@ class JchOptimizeCssParser extends JchOptimizeCssParserBase
 
         public $sLnEnd      = '';
         public $params;
-        protected $bBackend = FALSE;
+        protected $bBackend = false;
         public $e           = '';
         public $u           = '';
 
@@ -81,7 +72,7 @@ class JchOptimizeCssParser extends JchOptimizeCssParserBase
         public function __construct($params = NULL, $bBackend = false)
         {
                 $this->sLnEnd = is_null($params) ? "\n" : JchPlatformUtility::lnEnd();
-                $this->params = is_null($params) ? NULL : $params;
+                $this->params = $params;
 
                 $this->bBackend = $bBackend;
                 $e              = self::DOUBLE_QUOTE_STRING . '|' . self::SINGLE_QUOTE_STRING . '|' . self::BLOCK_COMMENTS . '|'
@@ -229,7 +220,9 @@ class JchOptimizeCssParser extends JchOptimizeCssParserBase
                                         }
                                         else
                                         {
-                                                $sMediaQuery .= $aParentMediaQuery['media_type'] . ' and ' . $aChildMediaQuery['media_type'];
+						//Two seperate media types are nested so we combine them to form an unknown type
+						//so the media query is treated as false but still syntactically correct
+                                                $sMediaQuery .= $aParentMediaQuery['media_type'] . $aChildMediaQuery['media_type'];
                                         }
                                 }
 
@@ -349,7 +342,7 @@ class JchOptimizeCssParser extends JchOptimizeCssParserBase
          */
         public function _correctUrlCB($aMatches, $aUrl)
         {
-                if (empty($aMatches[1]) || preg_match('#^(?:\(|/\*)#', $aMatches[0]))
+                if (empty($aMatches[1]) || $aMatches[1] == '/' || preg_match('#^(?:\(|/\*)#', $aMatches[0]))
                 {
                         return $aMatches[0];
                 }

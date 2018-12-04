@@ -33,29 +33,28 @@ class JchOptimizeAdmin
          * @param type $params
          * @param type $bBackend
          */
-        public function __construct(JchPlatformSettings $params, $bBackend = FALSE)
+        public function __construct(JchPlatformSettings $params, $bBackend = false)
         {
                 $this->params   = $params;
                 $this->bBackend = $bBackend;
         }
 
         /**
-         * 
-         * @param type $oObj
-         * @param type $iItemid
-         * @param type $sCss
-         * @return type
+	 * Retruns a multi-dimensional array of items to populate the multi-select exclude lists in the 
+	 * admin settings section
+	 *
+         * @param object  $sHtml 	HTML before it's optimized by JCH Optimize
+         * @param string  $sCss	Combined css contents
+         * @return array
          */
-        public function getAdminLinks($oObj, $iItemid, $sCss = '')
+        public function getAdminLinks($sHtml, $sCss = '')
         {
                 if (empty($this->links))
                 {
-                        $hash      = $iItemid . $this->params->get('pro_cookielessdomain_enable', 0);
+                        $hash      = $this->params->get('pro_cookielessdomain_enable', 0);
                         $sId       = md5('getAdminLinks' . JCH_VERSION . serialize($hash));
                         $aFunction = array($this, 'generateAdminLinks');
-                        $aArgs     = array($oObj, $sCss);
-                        $iLifeTime = (int) $this->params->get('cache_lifetime', '1') * 24 * 60 * 60;
-
+                        $aArgs     = array($sHtml, $sCss);
                         $this->links = JchPlatformCache::getCallbackCache($sId, $aFunction, $aArgs);
                 }
 
@@ -64,11 +63,11 @@ class JchOptimizeAdmin
 
         /**
          * 
-         * @param type $oObj
+         * @param type $sHtml Can be instance of JchOptimizeParser or JchOptimizeHtml
          * @param type $sCss
          * @return type
          */
-        public function generateAdminLinks($oObj, $sCss)
+        public function generateAdminLinks($sHtml, $sCss)
         {
                 JCH_DEBUG ? JchPlatformProfiler::start('GenerateAdminLinks') : null;
 
@@ -84,10 +83,10 @@ class JchOptimizeAdmin
                 $params->set('debug', '0');
                 $params->set('bottom_js', '2');
                 $params->set('includeAllExtensions', '1');
-                $params->set('excludeCss', array());
-                $params->set('excludeJs', array());
-                $params->set('excludeCssComponents', array());
-                $params->set('excludeJsComponents', array());
+               // $params->set('excludeCss', array());
+               // $params->set('excludeJs', array());
+               // $params->set('excludeCssComponents', array());
+               // $params->set('excludeJsComponents', array());
                 $params->set('csg_exclude_images', array());
                 $params->set('csg_include_images', array());
 
@@ -95,10 +94,8 @@ class JchOptimizeAdmin
 
                 try
                 {
-                        $sHtml   = $oObj->getOriginalHtml();
-                        $oParser = new JchOptimizeParser($params, $sHtml, JchOptimizeFileRetriever::getInstance());
-
-                        $aLinks = $oParser->getReplacedFiles();
+			$oParser = new JchOptimizeParser($params, $sHtml, JchOptimizeFileRetriever::getInstance());
+			$aLinks = $oParser->getReplacedFiles();
 
                         if ($sCss == '' && !empty($aLinks['css'][0]))
                         {
@@ -651,6 +648,9 @@ JFIELD;
 				$sExpires .= '' . PHP_EOL;
 				$sExpires .= '  <IfModule mod_headers.c>' . PHP_EOL;
 				$sExpires .= '    Header append Cache-Control "public"' . PHP_EOL;
+				$sExpires .= '    <FilesMatch ".(js|css|xml|gz|html)$">' . PHP_EOL;
+				$sExpires .= '       Header append Vary: Accept-Encoding' . PHP_EOL;
+				$sExpires .= '    </FilesMatch>' . PHP_EOL;
 				$sExpires .= '  </IfModule>' . PHP_EOL;
 				$sExpires .= '' . PHP_EOL;
 				$sExpires .= '</IfModule>' . PHP_EOL;

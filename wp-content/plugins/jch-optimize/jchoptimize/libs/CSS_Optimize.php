@@ -85,8 +85,11 @@ class CSS_Optimize extends Optimize
                 $u  = self::URI;
                 $e  = '(?<!\\\\)(?:' . $es . '|' . $u . ')|[\'"(]';
 
+		$b = self::BLOCK_COMMENTS;
+		$c = self::LINE_COMMENTS;
+
                 // Remove all comments
-                $rx   = "#(?>/?[^/\"'(]*+(?:$e)?)*?" . '\K(?>/\*(?:\*?[^*]*+)*?\*/|//[^\r\n]*+|$)#s';
+                $rx   = "#(?>/?[^/\"'(]*+(?:{$e})?)*?\K(?>{$b}|{$c}|$)#s";
                 $this->css = $this->_replace($rx, '', $this->css, '1');
 
                 // remove ws around , ; : { } in CSS Declarations and media queries

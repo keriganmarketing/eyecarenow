@@ -43,7 +43,7 @@ class JchOptimizeOutput
 
                 $aCache = JchPlatformCache::getCache($aGet['f']);
 
-                if ($aCache === FALSE)
+                if ($aCache === false)
                 {
 			if($bSend)
 			{
@@ -109,13 +109,13 @@ class JchOptimizeOutput
 
                 $sFile = $aCache['file'][$aGet['i']];
 
-                $sFile = JchOptimizeOutput::getCachedFile($sFile);
+                //$sFile = JchOptimizeOutput::getCachedFile($sFile);
 
                 $aSpriteCss = $aCache['spritecss'];
 
                 if (($aGet['type'] == 'css'))
                 {
-                        if (is_array($aSpriteCss) && !empty($aSpriteCss) && isset($aSpriteCss['needles']) && $aSpriteCss['replacements'])
+                        if (!empty($aSpriteCss) && !empty($aSpriteCss['needles']) && !empty($aSpriteCss['replacements']))
                         {
                                 $sFile = str_replace($aSpriteCss['needles'], $aSpriteCss['replacements'], $sFile);
                         }

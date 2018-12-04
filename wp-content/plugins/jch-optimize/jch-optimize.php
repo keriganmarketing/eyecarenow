@@ -4,7 +4,7 @@
  * Plugin Name: JCH Optimize
  * Plugin URI: http://www.jch-optimize.net/
  * Description: This plugin aggregates and minifies CSS and Javascript files for optimized page download
- * Version: 2.2.1
+ * Version: 2.3.0
  * Author: Samuel Marshall
  * License: GNU/GPLv3
  * Text Domain: jch-optimize
@@ -42,29 +42,23 @@ define('JCH_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 if (!defined('JCH_VERSION'))
 {
-        define('JCH_VERSION', '2.2.1');
+        define('JCH_VERSION', '2.3.0');
 }
 
 require_once(JCH_PLUGIN_DIR . 'jchoptimize/loader.php');
 
+//Handles activation routines
+include_once JCH_PLUGIN_DIR. 'jchplugininstaller.php';
+$JchPluginInstaller = new JchPluginInstaller();
+register_activation_hook(__FILE__, array($JchPluginInstaller, 'activate'));
+
 if (!file_exists(dirname(__FILE__) . '/dir.php'))
 {
-        jch_optimize_activate();
+        $JchPluginInstaller->activate();
 }
 
 if (is_admin())
 {
-        add_action('wp_ajax_garbagecron', 'jch_ajax_garbage_cron');
-        add_action('wp_ajax_nopriv_garbagecron', 'jch_ajax_garbage_cron');
-
-        function jch_ajax_garbage_cron()
-        {
-                $params = JchPlatformPlugin::getPluginParams();
-                JchOptimizeAjax::garbageCron($params);
-
-                die();
-        }
-
         require_once(JCH_PLUGIN_DIR . 'options.php');
 }
 else
@@ -126,6 +120,8 @@ function jchoptimize($sHtml)
 
 function jch_buffer_start()
 {
+	JchOptimizePagecache::initialize();
+
         ob_start();
 }
 
@@ -139,6 +135,7 @@ function jch_buffer_end()
 
                         ob_clean();
 
+			JchOptimizePagecache::store($sOptimizedHtml);
                         echo $sOptimizedHtml;
 
                         break;
@@ -173,37 +170,6 @@ function jch_plugin_action_links($links, $file)
 
         return $links;
 }
-
-function jch_optimize_activate()
-{
-        try
-        {
-                $wp_filesystem = JchPlatformCache::getWpFileSystem();
-        }
-        catch(Exception $e)
-        {
-                return false;
-        }
-
-        if ($wp_filesystem === false)
-        {
-                return false;
-        }
-
-        $file    = $wp_filesystem->wp_plugins_dir() . '/jch-optimize/dir.php';
-        $abspath = ABSPATH;
-        $code    = <<<PHPCODE
-<?php
-           
-\$DIR = '$abspath';
-           
-PHPCODE;
-
-        $wp_filesystem->put_contents($file, $code, FS_CHMOD_FILE);
-	JchOptimizeAdmin::leverageBrowserCaching();
-}
-
-register_activation_hook(__FILE__, 'jch_optimize_activate');
 
 function jch_optimize_uninstall()
 {

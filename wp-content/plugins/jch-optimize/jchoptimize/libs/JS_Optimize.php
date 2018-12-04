@@ -89,6 +89,9 @@ class JS_Optimize extends Optimize
                 //regex for line comments
                 $c = self::LINE_COMMENTS;
 
+		//regex for HTML comments
+		$h = self::HTML_COMMENTS;
+
                 //We have to do some manipulating with regexp literals; Their pattern is a little 'irregular' but 
                 //they need to be escaped
                 //
@@ -116,12 +119,13 @@ class JS_Optimize extends Optimize
                         . "(?>(?=[$ws ]++/)(?:(?<=$x1|$x2)(?>[$ws ]++($x3))|(?<=$x4)(?>[$ws ]++($x3))(?=\.(?>$x5)))|$)#si";
                 $this->js = $this->_replace($rx, '$1$2', $this->js, '1');
 
+		//remove HTML comments
+		$r1 = "(?>[<\]\-]?[^'\"<\]\-/]*+(?>$s1|$s2|$b|$c|$x|/)?)";
+		$rx = "#{$r1}*?\K(?>{$h}|$)#si";
+		$this->js = $this->_replace($rx, '', $this->js, '1B');
+
                 if (isset($this->_prepareOnly) && $this->_prepareOnly == TRUE)
                 {
-                        global $REGEXP_LITERAL;
-
-                        $REGEXP_LITERAL = $x;
-
                         return $this->js;
                 }
 

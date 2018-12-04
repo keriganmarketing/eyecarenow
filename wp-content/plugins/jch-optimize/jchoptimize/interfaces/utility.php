@@ -100,4 +100,11 @@ interface JchInterfaceUtility
          * @param type $exclude
          */
         public static function lsFiles($path, $filter = '.', $recurse = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'));
+	
+	/**
+	 *
+	 *
+	 *
+	 */
+	public static function isGuest();
 }
