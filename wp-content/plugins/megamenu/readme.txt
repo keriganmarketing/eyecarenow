@@ -1,9 +1,9 @@
 === Max Mega Menu ===
 Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, widget, dropdown menu, drag and drop, mobile, responsive, retina, theme editor, widget, shortcode, sidebar, icons, dashicons
-Requires at least: 3.8
-Tested up to: 4.9
-Stable tag: 2.4.1.4
+Requires at least: 4.9
+Tested up to: 5.1
+Stable tag: 2.5.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,7 @@ Max Mega Menu is developed with a focus on code quality, performance and usabili
 
 ####Pro Features:
 
+> * Tabbed Mega Menus
 > * Sticky Menu
 > * Vertical & Accordion Menus
 > * FontAwesome, Genericon & Custom Icons
@@ -56,7 +57,7 @@ Max Mega Menu is developed with a focus on code quality, performance and usabili
 > * WooCommerce & EDD support
 > * Google Fonts
 > * Roles & Restrictions
-> * Search, icon, HTML and logo mobile toggle blocks
+> * Extra mobile toggle blocks
 > * Automatic updates
 > * Priority Support
 >
@@ -108,10 +109,99 @@ See https://www.megamenu.com for more screenshots
 
 == Changelog ==
 
+= 2.6 =
+
+* Improvement: Use core version of CodeMirror (requires WordPress 4.9+)
+* Improvement: Performance on grid layout sub menus
+* Improvement: Accessibility - keyboard navigation and screen reader improvements
+* Improvement: Allow a container_id to be specified as an Active Menu Instance
+* Improvement: Swap out admin menu icon from font icon to SVG
+* Fix: JS Lint JavaScript
+* Fix: Compatiblity with ACF Pro Select2 fields
+* Fix: WPML Language selector. Language selector position now respects the position set in the WPML options
+* Fix: Apply 'no-headers' styling to grid layout sub menus
+* Fix: 'Hide Sub Menu on mobile' option doesn't apply to mega menus
+* Fix: Prevent CSS from being auto loaded
+* Fix: Grid Layout: Title and descriprion are pushed below the icon when the description wraps onto two lines
+* Change: Always show mega-indicator arrow on mobile (allows for unbinding events from the link itself)
+
+= 2.5.3.2 =
+
+* Fix: Dynamic Sub Menu Widths for tabbed sub menus
+* Fix: Remove outline from animated toggle block
+
+= 2.5.3.1 =
+
+* Fix: jQuery v3 compatibility
+* Fix: Mobile Menu not working in FireFox dev tools
+* Fix: Animated toggle block vertical positioning
+
+= 2.5.3 =
+
+* New: Animated Menu Toggle Block
+* Fix: Unable to change the number of columns on a newly added menu items within the "Mega Menu - Standard Layout" sub menu builder
+* Fix: Hide on mobile/desktop options for items within Mega Menu - Grid Layout sub menus
+* Fix: Residual Styling for :before :after pseudo elements
+* Fix: Conflict with uikit.js
+* Fix: Calculate dynamic submenu widths on page load (thanks to floq-design for the suggested fix!)
+* Fix: Remove hover styling from top level menu items on mobile (as Safari continues to apply the hover styling even once the item is deselected).
+[How to apply hover styling for your mobile menu](https://www.megamenu.com/documentation/how-to-apply-hover-styling-to-top-level-items-on-mobile/)
+* Fix: Close mobile menu when page background is clicked
+* Fix: Compatibility with Elementor Pro sticky header
+* Fix: Residual styling on span.mega-indicator
+
+= 2.5.2 =
+
+* Fix: Revert "When WPML is installed, do not override the wp_nav_menu_args "menu" parameter to allow WPML to display the correct menu (removing the requirement to enable the WPML "Adjust IDs for multilingual functionality" option)"
+* Improvement: Make PHP Function and Shortcode textareas readonly
+
+= 2.5.1 =
+
+* Improvement: Redirect to theme editor page after importing a menu theme
+* Improvement: Show a warning if attempting to edit a menu theme that is not actually applied to a menu
+* Improvement: Add warning to the auto generated style.css file not to manually edit auto generated CSS
+* Improvement: Add clearfix to mobile menu
+* Improvement: Add notice to Navigation Menu widget to let users know that the Max Mega Menu widget should be used, if the intention is to display a mega menu
+* Improvement: Rename admin JS and CSS handles to "maxmegamenu" (from "mega-menu") to avoid conflicts
+* Improvement: Detect when Clearfy plugin is installed and 'disable dashicons' has been enabled
+* Improvement: Styling reset added (transition) for improved theme compatibility
+* Improvement: Detect and clear "Breeze" cache when changes are made to a menu
+* New Feature: Add "Mobile Sub Menu - Overlay Content" option to theme editor
+* New Feature: Add "Mobile Sub Menu - Force Width" option to theme editor
+* Fix: Unbind events from li.mega-menu-column and li.mega-menu-row elements (when Unbind Events is set to true)
+* Fix: Hide widget and column selector from mega menu builder when sub menu type is set to "Mega Menu - Tabbed"
+* Fix: Strip slashes when using shortcodes in Menu Toggle mobile toggle block
+* Fix: When WPML is installed, do not override the wp_nav_menu_args "menu" parameter to allow WPML to display the correct menu (removing the requirement to enable the WPML "Adjust IDs for multilingual functionality" option)
+* Fix: Remove box-shadow from menu items on mobile menu when Menu Item Divider is enabled
+* Fix: Apply CSS resets to mega-menu-row and mega-menu-column elements
+* Fix: Apply 'mega-megamenu' class to standard layout sub menus within tabbed mega menus
+
+= 2.5 =
+
+* New Feature: On mobile, clicking the "Up" arrow (indicating that a sub menu is open) will close the sub menu. This feature will be enabled the next time the CSS is regenerated for the menu, or can be manually activated by going to Mega Menu > Tools > Clear CSS Cache.
+* Fix: Menu Themes will no longer be shared across sites in a multi site network (for new installations only, existing installations will not be affected)
+* Fix: PHP Warning in Mega_Menu_Menu_Item_Manager::get_grid_column()
+* Fix: Theme export URL
+* Improvement: Add megamenu_javascript_dependencies filter
+* Improvement: Styling resets added (max-height, pointer-events and sub menu arrow indicators) for improved theme compatibility
+* Improvement: Add support for "disable-collapse" class on menu items, to stop sub menus disappearing until the page background is clicked
+* Improvement: Improved RTL admin styling
+
+= 2.4.2 =
+
+* Improvement: Add Mobile Font (Hover) and Mobile Menu Item Background (Hover) options to theme editor
+* Fix: Add vendor prefixes to toggle block CSS to improve compatibility for old iPhones
+* Fix: Desktop menu visibility when Mobile Effect is set to slide and the browser is resized between desktop - mobile - desktop
+* Fix: Indent forth and fifth level menu items in grid layout sub menus
+* Fix: Remove webkit tap highlight color on mobile toggle bar
+* Improvement: Enable dynamic_sidebar_params filter when MEGAMENU_DYNAMIC_SIDEBAR_PARAMS constant is true
+* Improvement: CSS overrides/resets - word-wrap on menu item titles, transitions on anchors, visibility on h4 elements
+* Improvement: Use "max-mega-menu" class instead of "mega-menu" to avoid conflicts with themes that already use a "mega-menu" class
+
 = 2.4.1.5 =
 
 * Improvement: Detect Hummingbird as a caching plugin
-* Improvement: Accessbility - add aria-label attribute to links where "Hide text" has been enabled
+* Improvement: Accessibility - add aria-label attribute to links where "Hide text" has been enabled
 * Fix: Mobile toggle block logo width
 
 = 2.4.1.4 =

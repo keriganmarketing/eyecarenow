@@ -20,12 +20,20 @@ class Mega_Menu_Toggle_Blocks {
 
         add_filter( 'megamenu_scss_variables', array( $this, 'add_menu_toggle_block_vars_to_scss'), 10, 5 );
         add_filter( 'megamenu_scss_variables', array( $this, 'add_spacer_block_vars_to_scss'), 10, 5 );
+        add_filter( 'megamenu_scss_variables', array( $this, 'add_menu_toggle_animated_block_vars_to_scss'), 10, 5 );
+        
         add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_scss'), 10 );
         add_filter( 'megamenu_toggle_bar_content', array( $this, 'output_public_toggle_blocks' ), 10, 4 );
 
         add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle', array( $this, 'output_menu_toggle_block_html' ) );
         add_action( 'megamenu_output_admin_toggle_block_menu_toggle', array( $this, 'output_menu_toggle_block_html'), 10, 2 );
         add_action( 'megamenu_output_public_toggle_block_menu_toggle', array( $this, 'output_menu_public_toggle_block_html'), 10, 2 );
+
+
+        add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle_animated', array( $this, 'output_menu_toggle_block_animated_html' ) );
+        add_action( 'megamenu_output_admin_toggle_block_menu_toggle_animated', array( $this, 'output_menu_toggle_block_animated_html'), 10, 2 );
+        add_action( 'megamenu_output_public_toggle_block_menu_toggle_animated', array( $this, 'output_menu_public_toggle_block_animated_html'), 10, 2 );
+
 
         add_action( 'wp_ajax_mm_get_toggle_block_spacer', array( $this, 'output_spacer_block_html' ) );
         add_action( 'megamenu_output_admin_toggle_block_spacer', array( $this, 'output_spacer_block_html'), 10, 2 );
@@ -56,10 +64,10 @@ class Mega_Menu_Toggle_Blocks {
         // only use HTML version of toggle block if CSS version is above 2.4.0.2
         // if transient is missing, assume the latest version of the CSS is present and use Flex layout
         if ( ! $css_version || version_compare($css_version, '2.4.0.2') >= 0 ) {
-            $closed_text = isset( $settings['closed_text'] ) ? do_shortcode( $settings['closed_text'] ) : "MENU";
-            $open_text = isset( $settings['open_text'] ) ? do_shortcode( $settings['open_text'] ) : "MENU";
-
-            $html = "<span class='mega-toggle-label'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></span>";
+            $closed_text = isset( $settings['closed_text'] ) ? do_shortcode( stripslashes( $settings['closed_text'] ) ) : "MENU";
+            $open_text = isset( $settings['open_text'] ) ? do_shortcode( stripslashes( $settings['open_text'] ) ) : "MENU";
+            
+            $html = "<span class='mega-toggle-label' role='button' aria-expanded='false'><span class='mega-toggle-label-closed'>{$closed_text}</span><span class='mega-toggle-label-open'>{$open_text}</span></span>";
         } else {
             $html = "";
         }
@@ -116,8 +124,8 @@ class Mega_Menu_Toggle_Blocks {
             'closed_icon' => 'dash-f333',
             'open_icon' => 'dash-f153',
             'icon_position' => 'after',
-            'text_color' => isset($menu_theme['toggle_font_color']) ? $menu_theme['toggle_font_color'] : '#fff',
-            'icon_color' => isset($menu_theme['toggle_font_color']) ? $menu_theme['toggle_font_color'] : '#fff',
+            'text_color' => isset($menu_theme['toggle_font_color']) ? $menu_theme['toggle_font_color'] : 'rgb(221, 221, 221)',
+            'icon_color' => isset($menu_theme['toggle_font_color']) ? $menu_theme['toggle_font_color'] : 'rgb(221, 221, 221)',
             'text_size' => '14px',
             'icon_size' => '24px'
         );
@@ -233,10 +241,16 @@ class Mega_Menu_Toggle_Blocks {
 
         $id = apply_filters('megamenu_toggle_block_id', 'mega-toggle-block-' . $block_id);
 
-        $attributes = apply_filters('megamenu_toggle_block_attributes', array(
+        $atts = array(
             "class" => "mega-toggle-block {$class} mega-toggle-block-{$block_id}",
-            "id" => "mega-toggle-block-{$block_id}"
-        ), $block, $content, $nav_menu, $args, $theme_id);
+            "id" => "mega-toggle-block-{$block_id}",
+        );
+
+        if ( isset( $block['type'] ) && $block['type'] == 'menu_toggle' ) {
+            $atts['tabindex'] = '0';
+        }
+
+        $attributes = apply_filters('megamenu_toggle_block_attributes', $atts, $block, $content, $nav_menu, $args, $theme_id);
 
         $block_html .= "<div";
 
@@ -453,23 +467,11 @@ class Mega_Menu_Toggle_Blocks {
                         $open_icon = 'disabled';
                     }
                     
-                    if ( isset( $settings['closed_text'] ) ) {
-                        $closed_text = "'" . do_shortcode( stripslashes( html_entity_decode( $settings['closed_text'], ENT_QUOTES ) ) ) . "'";
-                    } else {
-                        $closed_text = "'MENU'";
-                    }
-
-                    if ( isset( $settings['open_text'] ) ) {
-                        $open_text = "'" . do_shortcode( stripslashes( html_entity_decode( $settings['open_text'], ENT_QUOTES ) ) ) . "'";
-                    } else {
-                        $open_text = "''";
-                    }
-                    
                     $styles = array(
                         'id' => $index,
                         'align' => isset($settings['align']) ? "'" . $settings['align'] . "'" : "'right'",
-                        'closed_text' => $closed_text,
-                        'open_text' => $open_text,
+                        'closed_text' => "''", // deprecated
+                        'open_text' => "''", // deprecated
                         'closed_icon' => $closed_icon != 'disabled' ? "'\\" . $closed_icon  . "'" : "''",
                         'open_icon' => $open_icon != 'disabled' ? "'\\" . $open_icon . "'" : "''",
                         'text_color' => isset($settings['text_color']) ? $settings['text_color'] : '#fff',
@@ -575,6 +577,69 @@ class Mega_Menu_Toggle_Blocks {
 
     }
 
+    /**
+     * Create a new variable containing the animated menu toggle blocks to be used by the SCSS file
+     *
+     * @param array $vars
+     * @param string $location
+     * @param string $theme
+     * @param int $menu_id
+     * @param string $theme_id
+     * @return array - all custom SCSS vars
+     * @since 2.5.3
+     */
+    public function add_menu_toggle_animated_block_vars_to_scss( $vars, $location, $theme, $menu_id, $theme_id ) {
+
+        $toggle_blocks = $this->get_toggle_blocks_for_theme( $theme_id );
+
+        $menu_toggle_animated_blocks = array();
+
+        if ( is_array( $toggle_blocks ) ) {
+
+            foreach( $toggle_blocks as $index => $settings ) {
+
+                if ( isset( $settings['type'] ) && $settings['type'] == 'menu_toggle_animated' ) {
+
+                    $styles = array(
+                        'id' => $index,
+                        'icon_scale' => isset($settings['icon_scale']) && strlen($settings['icon_scale']) ? $settings['icon_scale'] : "0.8",
+                        'icon_color' => isset($settings['icon_color']) ? $settings['icon_color'] : 'rgb(221, 221, 221)',
+                    );
+
+                    $menu_toggle_animated_blocks[ $index ] = $styles;
+                }
+
+            }
+        }
+
+        //$menu_toggle_blocks(
+        // (123, red, 150px),
+        // (456, green, null),
+        // (789, blue, 90%),());
+        if ( count( $menu_toggle_animated_blocks ) ) {
+
+            $list = "(";
+
+            foreach ( $menu_toggle_animated_blocks as $id => $vals ) {
+                $list .= "(" . implode( ",", $vals ) . "),";
+            }
+
+            // Always add an empty list item to meke sure there are always at least 2 items in the list
+            // Lists with a single item are not treated the same way by SASS
+            $list .= "());";
+
+            $vars['menu_toggle_animated_blocks'] = $list;
+
+        } else {
+
+            $vars['menu_toggle_animated_blocks'] = "()";
+
+        }
+
+        return $vars;
+
+    }
+
 
     /**
      * Print the toggle bar designer option
@@ -590,6 +655,7 @@ class Mega_Menu_Toggle_Blocks {
         $block_types = apply_filters("megamenu_registered_toggle_blocks", array(
             'title' => __("Add block to toggle bar", "megamenu"),
             'menu_toggle' => __("Menu Toggle", "megamenu"),
+            'menu_toggle_animated' => __("Menu Toggle Animated", "megamenu"),
             'spacer' => __("Spacer", "megamenu")
         ));
 
@@ -734,7 +800,7 @@ class Mega_Menu_Toggle_Blocks {
         ?>
 
         <div class='block'>
-            <div class='block-title'><?php _e("MENU", "megamenu"); ?> <span title='<?php _e("Menu Toggle", "megamenu"); ?>' class="dashicons dashicons-menu"></span></div>
+            <div class='block-title'><?php _e("TOGGLE", "megamenu"); ?> <span title='<?php _e("Menu Toggle", "megamenu"); ?>' class="dashicons dashicons-menu"></span></div>
             <div class='block-settings'>
                 <h3><?php _e("Menu Toggle Settings", "megamenu") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='menu_toggle' />
@@ -761,17 +827,93 @@ class Mega_Menu_Toggle_Blocks {
                     <?php _e("Text Size", "megamenu") ?><input type='text' class='text_size' name='toggle_blocks[<?php echo $block_id; ?>][text_size]' value='<?php echo stripslashes( esc_attr( $settings['text_size']  ) ) ?>' />
                 </label>
                 <label>
-                    <?php _e("Icon Size", "megamenu") ?><input type='text' class='icon_size' name='toggle_blocks[<?php echo $block_id; ?>][icon_size]' value='<?php echo stripslashes( esc_attr( $settings['icon_size']  ) ) ?>' />
-                </label>
-                <label>
                     <?php _e("Icon Color", "megamenu") ?>
                     <?php $this->print_toggle_color_option( 'icon_color', $block_id, $settings['icon_color'] ); ?>
+                </label>
+                <label>
+                    <?php _e("Icon Size", "megamenu") ?><input type='text' class='icon_size' name='toggle_blocks[<?php echo $block_id; ?>][icon_size]' value='<?php echo stripslashes( esc_attr( $settings['icon_size']  ) ) ?>' />
                 </label>
                 <label>
                     <?php _e("Icon Position", "megamenu") ?><select name='toggle_blocks[<?php echo $block_id; ?>][icon_position]'>
                         <option value='before' <?php selected( $settings['icon_position'], "before" ) ?> ><?php _e("Before", "megamenu") ?></option>
                         <option value='after' <?php selected( $settings['icon_position'], "after" ) ?> ><?php _e("After", "megamenu") ?></option>
                     </select>
+                </label>
+                <a class='mega-delete'><?php _e("Delete", "megamenu"); ?></a>
+            </div>
+        </div>
+
+        <?php
+    }
+
+
+    /**
+     * Output the menu toggle block (front end)
+     *
+     * @since 2.5.3
+     * @param string $html
+     * @param array $settings
+     * @return string
+     */
+    public function output_menu_public_toggle_block_animated_html( $html, $settings ) {
+        $style = isset( $settings['style'] ) ? $settings['style'] : "slider";
+        $label = isset( $settings['aria_label'] ) ? do_shortcode( stripslashes( $settings['aria_label'] ) ) : "Toggle Menu";
+
+        $html = '<button aria-label="'. esc_attr($label) .'" class="mega-toggle-animated mega-toggle-animated-' . esc_attr($style) . '" type="button" aria-expanded="false">
+                  <span class="mega-toggle-animated-box">
+                    <span class="mega-toggle-animated-inner"></span>
+                  </span>
+                </button>';
+
+        return apply_filters("megamenu_toggle_menu_toggle_animated_html", $html);
+
+    }
+
+    /**
+     * Output the HTML for the "Menu Toggle (Animated)" block settings
+     *
+     * @since 2.5.3
+     * @param int $block_id
+     * @param array $settings
+     */
+    public function output_menu_toggle_block_animated_html( $block_id, $settings = array() ) {
+
+        if ( empty( $settings ) ) {
+            $block_id = "0";
+        }
+
+        $defaults = array(
+            'icon_scale' => '0.8',
+            'icon_color' => 'rgb(221, 221, 221)',
+            'aria_label' => 'Toggle Menu'
+        );
+
+        $settings = array_merge( $defaults, $settings );
+
+        ?>
+
+        <div class='block'>
+            <div class='block-title'><?php _e("TOGGLE", "megamenu"); ?> <span title='<?php _e("Menu Toggle", "megamenu"); ?>' class="dashicons dashicons-menu"></span></div>
+            <div class='block-settings'>
+                <h3><?php _e("Animated Menu Toggle Settings", "megamenu") ?></h3>
+                <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='menu_toggle_animated' />
+                <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
+                <input type='hidden' class='style' name='toggle_blocks[<?php echo $block_id; ?>][style]' value='slider'>
+                
+                <label>
+                    <?php _e("Color", "megamenu") ?>
+                    <?php $this->print_toggle_color_option( 'icon_color', $block_id, $settings['icon_color'] ); ?>
+                </label>
+                <label>
+                    <?php _e("Size", "megamenu") ?><select name='toggle_blocks[<?php echo $block_id; ?>][icon_scale]'>
+                        <option value='0.6' <?php selected( $settings['icon_scale'], "0.6" ) ?> ><?php _e("Small", "megamenu") ?></option>
+                        <option value='0.8' <?php selected( $settings['icon_scale'], "0.8" ) ?> ><?php _e("Medium", "megamenu") ?></option>
+                        <option value='1.0' <?php selected( $settings['icon_scale'], "1.0" ) ?> ><?php _e("Large", "megamenu") ?></option>
+                        <option value='1.2' <?php selected( $settings['icon_scale'], "1.2" ) ?> ><?php _e("X Large", "megamenu") ?></option>
+                    </select>
+                </label>
+                <label>
+                    <?php _e("Label", "megamenu") ?><input type='text' class='aria_label' name='toggle_blocks[<?php echo $block_id; ?>][aria_label]' value='<?php echo stripslashes( esc_attr( $settings['aria_label']  ) ) ?>' />
                 </label>
                 <a class='mega-delete'><?php _e("Delete", "megamenu"); ?></a>
             </div>
