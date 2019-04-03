@@ -1,4 +1,3 @@
-
 <?php
 
 /**
@@ -36,6 +35,13 @@ class JchOptimizePagecache
 	{
 		if (self::isCachingEnabled())
 		{
+			if ($_SERVER['REQUEST_METHOD'] === 'POST') 
+			{
+				JchPlatformCache::deleteCache();
+
+				return;
+			}
+
 			$html = JchPlatformCache::getCache(self::getPageCacheId(), true);
 
 			if ($html !== false)
@@ -46,8 +52,8 @@ class JchOptimizePagecache
 					$html = str_replace('</body>', $tag, $html);
 				}
 
+				while (@ob_end_clean());
 				echo $html;
-				while (@ob_end_flush());
 
 				exit();
 			}
@@ -64,6 +70,10 @@ class JchOptimizePagecache
 
 			$parts[] = JchOptimizeBrowser::getInstance()->getFontHash();
 			$parts[] = JchPlatformUri::getInstance()->toString();
+
+			//Add a value to the array that will be used to determine the page cache id
+			//@TODO Remove function to platform codes
+			$parts = apply_filters('jch_optimize_get_page_cache_id', $parts);
 
 			$sCacheId = md5(serialize($parts));
 
@@ -94,7 +104,15 @@ class JchOptimizePagecache
 
 	public static function isCachingEnabled()
 	{
+		//just return false with this filter if you don't want the page to be cached
+		//@TODO Remove function to platform codes
+		$enabled = apply_filters('jch_optimize_page_cache_set_caching', true);
 
+		if (!$enabled)
+		{
+			return false;
+		}
+		
 		$params = JchPlatformPlugin::getPluginParams();
 
 		if ($params->get('cache_enable', '0') && JchPlatformUtility::isGuest() && !self::isExcluded($params))

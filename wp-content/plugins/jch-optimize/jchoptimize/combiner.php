@@ -101,7 +101,6 @@ class JchOptimizeCombiner extends JchOptimizeCombinerBase
 
                 $oCssParser   = $this->oCssParser;
                 $aSpriteCss   = array();
-                $aFontFace    = array();
 
                 $aContentsArray = array();
 
@@ -135,6 +134,7 @@ class JchOptimizeCombiner extends JchOptimizeCombinerBase
                         'etag'        => md5($this->$sType),
                         'file'        => $aContentsArray,
                         'spritecss'   => $aSpriteCss,
+			'optimizecssdelivery' => $this->params->get('pro_optimizeCssDelivery_enable', '0')
                 );
 
                 JCH_DEBUG ? JchPlatformProfiler::stop('GetContents - ' . $sType) : null;
@@ -153,8 +153,6 @@ class JchOptimizeCombiner extends JchOptimizeCombinerBase
         public function combineFiles($aUrlArray, $sType, $oCssParser)
         {
                 $sContents = '';
-
-                $this->bAsync    = FALSE;
 
                 $oFileRetriever = JchOptimizeFileRetriever::getInstance();
 
@@ -195,11 +193,6 @@ class JchOptimizeCombiner extends JchOptimizeCombinerBase
                         }
 
                         JCH_DEBUG ? JchPlatformProfiler::stop('CombineFile - ' . $sUrl, TRUE) : null;
-                }
-
-                if ($this->bAsync)
-                {
-                        $sContents = $this->getLoadScript() . $sContents;
                 }
 
                 return $sContents;
@@ -246,6 +239,7 @@ class JchOptimizeCombiner extends JchOptimizeCombinerBase
                                 $sContent = mb_convert_encoding($sContent, 'utf-8', $sEncoding);
                         }
 
+			//Remove quotations around imported urls
                         $sImportContent = preg_replace('#@import\s(?:url\()?[\'"]([^\'"]+)[\'"](?:\))?#', '@import url($1)', $sContent);
 
                         if (is_null($sImportContent))

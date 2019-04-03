@@ -1,8 +1,8 @@
 === JCH Optimize ===
 Contributors: codealfa
-Tags: improve performance, optimize download speed, minify, aggregate, pagespeed, gtmetrix, webpagetest, yslow, minification, css, javascript, html, lazy load, seo, search engine optimization, website optimization, download speed, speed up website, optimize css delivery, render blocking, css sprite, gzip, combine css, combine javascript, cdn, content delivery network, website performance, website speed, fast download, web performance, website analysis, speed up download, minimize http requests, reduce bandwidth, caching, cache, page cache, speed up wordpress
-Tested up to: 4.9.8
-Stable tag: 2.3.0
+Tags: improve performance, optimize download speed, minify, aggregate, pagespeed, gtmetrix, webpagetest, yslow, minification, css, javascript, html, lazy load, seo, search engine optimization, website optimization, download speed, speed up website, optimize css delivery, render blocking, css sprite, gzip, combine css, combine javascript, cdn, content delivery network, website performance, website speed, fast download, web performance, website analysis, speed up download, minimize http requests, reduce bandwidth, caching, cache, page cache, speed up wordpress, http/2 push
+Tested up to: 5.1.1
+Stable tag: 2.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,33 @@ The combined files are accessed by the browser via a jscss.php file in the `/wp-
 Simply deactivate or uninstall the plugin to reverse any changes it has made. The plugin doesn't modify any existing file or code but merely manipulates the HTML before it is sent to the brower. Any apparent persistent change after the plugin is deactivated is due to caching so ensure to flush all your WordPress, third party or browser cache.
 
 == Changelog ==
+
+= 2.4.2 =
+* Minor bug fixes and improvements
+* Added option to autosize images in Lazyload [PRO VERSION]
+* Load CSS file asynchronously using preload attribute instead of javascript in Optimize CSS Delivery [PRO VERSION]
+* Fixed bug in Optimize Image not working on Safari [PRO VERSION]
+
+= 2.4.1 =
+* Improved compatibility with page caching and third party plugins
+* Fixed bug in HTML Minifier library
+* Fixed issue with font not showing correctly on some sites
+* Fixed bug in Lazy-load feature [PRO VERSION]
+
+= 2.4.0 =
+* Minor bug fixes and improvements
+* Improved efficieny of caching policy of static assets
+* Added Http/2 push feature [PRO VERSION]
+* Added support for srcsets and iframe to Lazyload images feature [PRO VERSION] 
+* Removed font-face from combined CSS file when Optimize CSS Delivery is enabled [PRO VERSION]
+
+= 2.3.2 =
+* Fixed issue with plugin not running on some sites with last version
+* Added ability to mark and skip images already optimized in subfolders [PRO VERSION]
+* Fixed issue with autoupdate of PRO version reverting to FREE version [PRO VERSION]
+
+= 2.3.1 =
+* Fixed issue in page cache causing PHP errors
 
 = 2.3.0 =
 * Added page cache feature

@@ -74,7 +74,7 @@ class JchPlatformCache implements JchInterfaceCache
 
                 $file = self::_getFileName($id);
 
-                if (!$wp_filesystem->exists($file) || time() > ($wp_filesystem->mtime($file) + self::getLifetime()))
+                if (!self::getCache($id, true))
                 {
 			$contents = call_user_func_array($function, $args);
 

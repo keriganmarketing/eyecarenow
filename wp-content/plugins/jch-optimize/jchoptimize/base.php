@@ -25,7 +25,7 @@ defined('_JCH_EXEC') or die('Restricted access');
  * Some basic utility functions required by the plugin and shared by class
  * 
  */
-class JchOptimizeBase
+class JchOptimizeBase extends JchOptimizeRegextokenizer
 {
 
         /**

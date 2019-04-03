@@ -4,7 +4,7 @@
  * Plugin Name: JCH Optimize
  * Plugin URI: http://www.jch-optimize.net/
  * Description: This plugin aggregates and minifies CSS and Javascript files for optimized page download
- * Version: 2.3.0
+ * Version: 2.4.2
  * Author: Samuel Marshall
  * License: GNU/GPLv3
  * Text Domain: jch-optimize
@@ -42,7 +42,7 @@ define('JCH_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 if (!defined('JCH_VERSION'))
 {
-        define('JCH_VERSION', '2.3.0');
+        define('JCH_VERSION', '2.4.2');
 }
 
 require_once(JCH_PLUGIN_DIR . 'jchoptimize/loader.php');
@@ -127,23 +127,31 @@ function jch_buffer_start()
 
 function jch_buffer_end()
 {
+	//Iterate through all active buffers
         while ($level = ob_get_level())
         {
-                if (JchOptimizeHelper::validateHtml($sHtml = ob_get_contents()))
-                {
-                        $sOptimizedHtml = jchoptimize($sHtml);
+		//Need to access the final buffer, apparently using ob_get_status is more reliable
+		$buffer_status = ob_get_status();
 
-                        ob_clean();
-
+		//If there's a valid HTML at the last buffer, optimize, cache and exit loop
+		if ($buffer_status['level'] == '1' && JchOptimizeHelper::validateHtml(ob_get_contents()))
+		{
+			//Retrieve and erase the contents of buffer
+			$sHtml = ob_get_clean();
+			//Optimize and store HTML
+			$sOptimizedHtml = jchoptimize($sHtml);
 			JchOptimizePagecache::store($sOptimizedHtml);
-                        echo $sOptimizedHtml;
+			
+			//Send optimized HTML to browser
+			echo $sOptimizedHtml;
 
-                        break;
-                }
+			//Exit loop
+			break;
+		}
 
-                ob_end_flush();
+		ob_end_flush();
 
-                //buffer not flushed for some reason.
+                //buffer not turned off for some reason.
                 if ($level == ob_get_level())
                 {
                         break;

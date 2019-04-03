@@ -311,6 +311,11 @@ class JchPlatformUtility implements JchInterfaceUtility
         {
                 foreach ($items as $item)
                 {
+			if ($item['name'] == 'jch_optimize_backup_images')
+			{
+				continue;
+			}
+
                         if ($item['type'] == 'f' && preg_match('#' . $filter . '#', $item['name']))
                         {
                                 $files[] = $path . '/' . $item['name'];
@@ -330,5 +335,18 @@ class JchPlatformUtility implements JchInterfaceUtility
 	public static function isGuest()
 	{
 		return !is_user_logged_in();
+	}
+
+
+	public static function sendHeaders($headers)
+	{
+		if (!empty($headers))
+		{
+			foreach ($headers as $header => $value)
+			{
+				header($header . ': ' . $value);
+			}
+		}
+
 	}
 }
