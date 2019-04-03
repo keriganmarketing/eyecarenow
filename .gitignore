@@ -11,6 +11,6 @@ wp-content/themes/eyecarenow/vendor/
 wp-content/themes/eyecarenow/node_modules/
 
 # Untracked prod files
-wp-content/uploads/**
+# wp-content/uploads/**
 wp-admin/**
 wp-includes/**
