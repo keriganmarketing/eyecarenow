@@ -1776,3 +1776,20 @@ ul.dpe-flexible-posts {
     color: $color_15;
   }
 }
+
+// Appointment Request
+.gfield {
+  margin-top: 1.5rem !important;
+
+  label.gfield_label {
+    font-weight: bold;
+    color: $primary;
+  }
+
+  span.name_first,
+  span.name_last {
+    label {
+      display: none;
+    }
+  }
+}
