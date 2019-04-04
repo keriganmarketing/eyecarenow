@@ -8,41 +8,14 @@
 $newsenabled    = get_field('show_news_feed');
 $newscat        = get_field('news_category');
 $sidebarbuttons = get_field('sidebar_buttons');
-$slider         = get_field('header_slideshow');
 
 get_header(); ?>
     <div id="primary" class="support-area">
         <div id="mid">
             <div class="container">
 
-                <?php if ($slider != '') { ?>
-                    <div id="featured-image">
-                        <link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/inc/flexslider/flexslidermin.css" type="text/css">
-                        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-                        <script src="<?php echo get_template_directory_uri() ?>/inc/flexslider/jquery.flexslider-min.js"></script>
-                        <div class="flexslider">
-                            <ul class="slides">
-                                <?php
-
-
-                                $p = 1;
-                                foreach ($slider[0] as $ph) {
-                                    echo '<li>';
-                                    echo '<img src="' . $ph['imageURL'] . '" alt="' . $ph['alttext'] . '" />';
-                                    echo '</li>';
-                                    $p++;
-                                }
-
-
-                                ?>
-                            </ul>
-                        </div>
-
-                    </div>
-                <?php } ?>
-
                 <div id="content-left" class="col res-13 tab-13 wide-1 ph-1">
-                    <div id="primary" class="content-area">
+                    <div class="content-area">
                         <main id="locations" class="locations" role="contact">
 
                             <?php while (have_posts()) : the_post(); ?>
@@ -133,6 +106,7 @@ get_header(); ?>
                 </div>
 
                 <div id="content-bottom" class="locations">
+                    <p>&nbsp;</p>
                     <?php
 
                     foreach ($locations as $location) {
@@ -144,9 +118,9 @@ get_header(); ?>
                         $phone    = get_field('phone_number', $id);
                         echo '<div class="location col res-14 tab-13 wide-12 ph-1">';
                         echo '<h3>' . $location->post_title . '</h3>';
-                        echo $address . '<br>';
-                        echo $address2;
-                        echo '<p>Phone: ' . $phone . '</p>';
+                        echo '<p style="font-size:14px;">'.$address . '<br>';
+                        echo $address2.'<br>';
+                        echo 'Phone: ' . $phone . '</p>';
                         echo '<form action="http://maps.google.com/maps" method="get" target="_blank"><input name="saddr" type="hidden" value="" /><input name="daddr" type="hidden" value="' . strip_tags($address) . '" /><input type="submit" value=" Get Directions " />&nbsp;</form>&nbsp;';
                         //echo '<form action="/patient-center/request-an-appointment/" method="get" ><input name="office" type="hidden" value="'.$location->post_title.'" /><input type="submit" value=" Request Appointment " />&nbsp;</form>';
                         echo '</div>';
@@ -154,17 +128,6 @@ get_header(); ?>
 
                     ?>
                 </div>
-
-                <script type="text/javascript" charset="utf-8">
-                    $(window).load(function () {
-                        $('.flexslider').flexslider({
-                            controlNav: true,                //Boolean: Create navigation for paging control of each clide? Note: Leave true for manualControls usage
-                            directionNav: false,             //Boolean: Create navigation for previous/next navigation? (true/false)
-                            prevText: "<",           		 //String: Set the text for the "previous" directionNav item
-                            nextText: ">"               	 //String: Set the text for the "next" directionNav item
-                        });
-                    });
-                </script>
             </div>
         </div>
     </div>

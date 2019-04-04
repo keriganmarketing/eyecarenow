@@ -8,7 +8,6 @@
 $newsenabled    = 1;
 $newscat        = get_field('news_category');
 $sidebarbuttons = get_field('sidebar_buttons');
-$slider         = get_field('header_slideshow');
 
 get_header(); ?>
 <div id="primary" class="support-area">
@@ -17,7 +16,7 @@ get_header(); ?>
             <div class="container">
                 <div id="content-left" class="col res-34 tab-23 wide-1 ph-1">
 
-                    <div id="primary" class="content-area">
+                    <div class="content-area">
                         <main id="main" class="site-main" role="main">
 
                             <?php if (function_exists('yoast_breadcrumb')) {
@@ -40,7 +39,7 @@ get_header(); ?>
                             <?php endwhile; // end of the loop. ?>
 
                         </main><!-- #main -->
-                    </div><!-- #primary -->
+                    </div>
 
                 </div>
                 <div id="content-right" class="col res-14 tab-13 wide-1 ph-1">

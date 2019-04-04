@@ -7,7 +7,6 @@
 $newsenabled    = get_field('show_news_feed');
 $newscat        = get_field('news_category');
 $sidebarbuttons = get_field('sidebar_buttons');
-$slider         = get_field('header_slideshow');
 $headshot       = get_field('headshot');
 $author_id      = get_field('blog_author_link');
 
@@ -35,7 +34,8 @@ get_header(); ?>
 
                     <?php if (count($docarticles) > 0) { ?>
                         <div id="recent-news">
-                            <h3>Recently Posted</h3>
+                            &nbsp;
+                            <h3 class="title is-4 is-secondary">Recently Posted</h3>
                             <ul>
                                 <?php foreach ($docarticles as $post) : setup_postdata($post); ?>
 
@@ -53,7 +53,7 @@ get_header(); ?>
             </div>
             <div id="content-left" class="col res-23 tab-23 wide-12 ph-1" style="padding-right:35px;">
 
-                <div id="primary" class="content-area">
+                <div class="content-area">
                     <main id="main" class="site-main" role="main">
 
                         <?php if (have_posts()) : ?>

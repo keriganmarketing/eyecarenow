@@ -7,7 +7,6 @@
 $newsenabled    = get_field('show_news_feed');
 $newscat        = 'news_category';
 $sidebarbuttons = get_field('sidebar_buttons');
-$slider         = get_field('header_slideshow');
 $header_photo   = get_field('header_photo');
 
 get_header(); ?>
