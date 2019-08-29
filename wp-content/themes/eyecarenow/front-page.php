@@ -15,7 +15,7 @@ get_header(); ?>
         <main id="main" class="site-main" role="main">
             <div id="mid">
                 <div class="mast-container">
-                    <img src="<?php echo get_template_directory_uri() . '/images/mast2018.png'; ?>" alt="See what we can do for you with our services and eyeglass center">
+                    <img src="<?php echo get_template_directory_uri() . '/images/mast0819.png'; ?>" alt="See what we can do for you with our services and eyeglass center">
                 </div>
                 <div id="content" class="section-wrapper site-content">
                     <div class="container home-page-text">
