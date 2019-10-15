@@ -432,6 +432,11 @@ add_filter('request', 'myfeed_request');
 
 add_shortcode('feature_boxes', function ($atts) {
 
+    $a = shortcode_atts(
+		array(
+            'item_class' => 'column is-6 is-3-widescreen',
+        ), $atts, 'team' );
+
     $sidebarbuttons = get_field('sidebar_buttons');
     $templateOutput = '<div class="section-wrapper support feature-boxes"><div class="columns is-multiline is-justified">';
 
@@ -442,7 +447,7 @@ add_shortcode('feature_boxes', function ($atts) {
         $photo = get_field('photo',$id);
         $info = get_field('summary_text',$id);
     
-        $templateOutput .= '<div class="column is-6 is-3-widescreen">
+        $templateOutput .= '<div class="'.$a['item_class'].'">
             <div class="card is-fullheight">
                 <div class="card-image">
                     <div class="image is-4by3 is-background" style="background-image: url('.$photo['url'].');">
