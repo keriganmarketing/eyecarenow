@@ -1,20 +1,20 @@
 <?php
 $isVideo  = ($fbPost->type == 'video');
-$hasImage = ($fbPost->full_picture != '' && $isVideo == false);
-$date     = date('M j, Y',strtotime($fbPost->created_time));
-$words = wp_trim_words($fbPost->message, 51, '...');
+$hasImage = ($fbPost->full_image_url != '' && $isVideo == false);
+$date     = date('M j',strtotime($fbPost->post_date)) . ' at ' . date('g:i a',strtotime($fbPost->post_date));
+$words    = wp_trim_words($fbPost->post_content, 51, '...');
 ?>
 <div class="column is-6-tablet is-4-desktop">
     <div class="card social-module facebook has-text-centered <?= ($hasImage == true ? 'has-image' : 'no-image'); ?>">
         <?php if ($hasImage == true) { ?>
             <div class="card-image">
-                <img src="<?= $fbPost->full_picture; ?>">
+                <img src="<?= $fbPost->full_image_url; ?>">
             </div>
         <?php } ?>
         <?php if ($isVideo == true) { ?>
             <div class="card-video">
                 <iframe
-                    src="<?= $fbPost->link; ?>"
+                    src="<?= $fbPost->video_url; ?>"
                     style="border:none;overflow:hidden"
                     scrolling="no"
                     frameborder="0"

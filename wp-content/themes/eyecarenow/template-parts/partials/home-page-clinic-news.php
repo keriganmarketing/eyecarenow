@@ -2,7 +2,8 @@
 use Includes\Modules\KMAFacebook\FacebookController;
 
 $facebook = new FacebookController();
-$feed = $facebook->getFeed(3);
+$feed = $facebook->getFbPosts(3);
+$now     = time();
 
 /**
  * @package KMA
@@ -11,7 +12,7 @@ $feed = $facebook->getFeed(3);
  * @version 1.2
  */
 
-if($feed->posts){
+if(count($feed) > 0){ 
 ?>
 
 <div class="container">
@@ -20,7 +21,7 @@ if($feed->posts){
     <div class="article-container">
         <div class="columns is-multiline">
             <?php 
-            foreach ($feed->posts as $fbPost) {
+            foreach ($feed as $fbPost) {
 
                 include(locate_template('template-parts/partials/mini-facebook-article.php'));
 
