@@ -30,7 +30,7 @@
     "glob": "^7.1.2",
     "jquery": "^1.12.4",
     "jquery-mask-plugin": "^1.14.12",
-    "loader-utils": "^1.1.0",
+    "loader-utils": "^1.4.1",
     "purgecss-webpack-plugin": "^0.22.0",
     "vue-flatpickr-component": "^4.0.0",
     "vue-parallax-js": "0.0.5",
